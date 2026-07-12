@@ -1,7 +1,7 @@
 import { prisma } from '../lib/prisma.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 
-const SITE_URL = process.env.CLIENT_URL || 'http://localhost:5173';
+const SITE_URL = process.env.SITE_URL || process.env.CLIENT_URL || 'http://localhost:5173';
 
 export const getSitemap = asyncHandler(async (req, res) => {
   const [products, categories] = await Promise.all([
@@ -27,5 +27,5 @@ export const getSitemap = asyncHandler(async (req, res) => {
 
 export const getRobotsTxt = (req, res) => {
   res.set('Content-Type', 'text/plain');
-  res.send(`User-agent: *\nAllow: /\nSitemap: ${SITE_URL.replace('5173', '5000')}/sitemap.xml\n`);
+  res.send(`User-agent: *\nAllow: /\nSitemap: ${SITE_URL}/sitemap.xml\n`);
 };
