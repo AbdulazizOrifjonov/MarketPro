@@ -1,0 +1,51 @@
+services:
+  - type: web
+    name: marketpro-api
+    region: singapore
+    env: node
+    buildCommand: npm ci && npx prisma generate && npx prisma db push
+    startCommand: node src/server.js
+    healthCheckPath: /api/health
+    autoDeploy: true
+    plan: free
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: CLIENT_URL
+        value: https://marketpro-8qj.pages.dev
+      - key: SITE_URL
+        value: https://marketpro-8qj.pages.dev
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: ADMIN_SEED_EMAIL
+        value: admin@marketpro.uz
+      - key: ADMIN_SEED_PASSWORD
+        sync: false
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_BOT_USERNAME
+        value: MarketProVerifyBot
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        value: 587
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+  - type: cron
+    name: keep-awake
+    schedule: "*/14 * * * *"
+    command: curl -s -o /dev/null https://marketpro-api.onrender.com/api/health
