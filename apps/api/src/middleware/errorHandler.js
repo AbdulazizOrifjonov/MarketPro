@@ -1,10 +1,21 @@
 import { AppError } from '../utils/AppError.js';
 
+function setCorsHeaders(req, res) {
+  const origin = req.headers.origin;
+  if (origin) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+  }
+}
+
 export function notFoundHandler(req, res) {
+  setCorsHeaders(req, res);
   res.status(404).json({ error: { message: 'Route not found', code: 'NOT_FOUND' } });
 }
 
 export function errorHandler(err, req, res, next) {
+  setCorsHeaders(req, res);
+
   if (err instanceof AppError) {
     return res.status(err.statusCode).json({ error: { message: err.message, code: err.code } });
   }
