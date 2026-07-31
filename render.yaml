@@ -1,10 +1,11 @@
 services:
   - type: web
-    name: marketpro-api
-    region: singapore
+    name: marketpro
     env: node
-    buildCommand: npm ci && npx prisma generate && npx prisma db push
-    startCommand: node src/server.js
+    region: frankfurt
+    rootDir: .
+    buildCommand: npm install && npm run install:all && npm run build
+    startCommand: npm start
     healthCheckPath: /api/health
     autoDeploy: true
     plan: free
@@ -16,9 +17,9 @@ services:
       - key: JWT_SECRET
         sync: false
       - key: CLIENT_URL
-        value: https://marketpro-8qj.pages.dev
+        sync: false
       - key: SITE_URL
-        value: https://marketpro-8qj.pages.dev
+        sync: false
       - key: GOOGLE_CLIENT_ID
         sync: false
       - key: GOOGLE_CLIENT_SECRET
@@ -48,4 +49,4 @@ services:
   - type: cron
     name: keep-awake
     schedule: "*/14 * * * *"
-    command: curl -s -o /dev/null https://marketpro-api.onrender.com/api/health
+    command: curl -s -o /dev/null https://marketpro.onrender.com/api/health

@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import path from 'node:path';
+import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import rateLimit from 'express-rate-limit';
 
@@ -68,6 +69,17 @@ app.use('/api/translate', translateRoutes);
 app.use('/api/auth', telegramRoutes);
 app.use('/api/admin-users', adminUserRoutes);
 app.use('/api/flash-sale', flashSaleRoutes);
+
+// ─── Monolith: React frontend build'ini static fayl sifatida ulash ───
+const distDir = path.join(__dirname, '../../web/dist');
+const hasFrontend = fs.existsSync(path.join(distDir, 'index.html'));
+
+if (hasFrontend) {
+  app.use(express.static(distDir));
+  app.get(/^(?!\/api(?:\/|$)|\/uploads(?:\/|$)|\/sitemap\.xml$|\/robots\.txt$).*/, (req, res) => {
+    res.sendFile(path.join(distDir, 'index.html'));
+  });
+}
 
 app.use(notFoundHandler);
 app.use(errorHandler);
