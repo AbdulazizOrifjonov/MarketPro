@@ -52,7 +52,7 @@ const CATEGORY_TREE = [
   },
 ];
 
-const BRANDS = ['Samsung', 'Apple', 'Xiaomi', 'LG', 'Artel', 'Sony', 'Asus', 'HP', 'Bosch', 'Nike'];
+const BRANDS = ['Samsung', 'Apple', 'Xiaomi', 'LG', 'Artel', 'Sony', 'Asus', 'HP', 'Bosch', 'Nike', 'Microsoft'];
 
 const PRODUCT_IMAGE_PLACEHOLDER = (seed) => [
   `https://picsum.photos/seed/${seed}-1/800/800`,
@@ -82,7 +82,7 @@ const PRODUCT_TEMPLATES = [
   { name: 'Cordless Drill 18V', cat: 'Drill Machines', brand: 'Bosch', price: 1450000 },
   { name: 'Concrete Mixer 130L', cat: 'Construction Equipment', brand: 'Bosch', price: 3200000 },
   { name: 'PlayStation 5', cat: 'Consoles', brand: 'Sony', price: 7900000 },
-  { name: 'Xbox Series X', cat: 'Consoles', brand: 'Sony', price: 7400000 },
+  { name: 'Xbox Series X', cat: 'Consoles', brand: 'Microsoft', price: 7400000 },
   { name: 'DualSense Wireless Controller', cat: 'Accessories', brand: 'Sony', price: 690000 },
   { name: 'Gaming Headset Pro', cat: 'Accessories', brand: 'Asus', price: 540000 },
   { name: 'Air Max Running Shoes', cat: 'Men', brand: 'Nike', price: 1250000 },

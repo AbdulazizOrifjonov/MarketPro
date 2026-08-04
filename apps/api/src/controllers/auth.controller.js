@@ -5,20 +5,11 @@ import { prisma } from '../lib/prisma.js';
 import { signToken } from '../utils/jwt.js';
 import { AppError } from '../utils/AppError.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
+import { publicUser, provisionCartAndWishlist } from '../utils/shared.js';
 
 const googleClient = process.env.GOOGLE_CLIENT_ID
   ? new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
   : null;
-
-export function publicUser(user) {
-  const { passwordHash, resetToken, resetTokenExpiry, ...rest } = user;
-  return rest;
-}
-
-async function provisionCartAndWishlist(userId) {
-  await prisma.cart.create({ data: { userId } });
-  await prisma.wishlist.create({ data: { userId } });
-}
 
 export const register = asyncHandler(async (req, res) => {
   const { name, email, password, phone } = req.body;

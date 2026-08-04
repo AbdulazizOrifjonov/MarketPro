@@ -46,7 +46,3 @@ services:
         sync: false
       - key: SMTP_PASS
         sync: false
-  - type: cron
-    name: keep-awake
-    schedule: "*/14 * * * *"
-    command: curl -s -o /dev/null https://marketpro.onrender.com/api/health

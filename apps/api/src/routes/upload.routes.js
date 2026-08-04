@@ -8,8 +8,11 @@ const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 15 * 1024 * 1024, files: 10 },
   fileFilter: (req, file, cb) => {
-    const allowed = /^(image\/(jpeg|png|webp|gif)|video\/mp4)$/;
-    if (!allowed.test(file.mimetype)) return cb(new Error('Unsupported file type'));
+    const allowedMimes = /^(image\/(jpeg|png|webp|gif)|video\/mp4)$/;
+    const allowedExts = /\.(jpe?g|png|webp|gif|mp4)$/i;
+    if (!allowedMimes.test(file.mimetype) || !allowedExts.test(file.originalname)) {
+      return cb(new Error('Unsupported file type'));
+    }
     cb(null, true);
   },
 });

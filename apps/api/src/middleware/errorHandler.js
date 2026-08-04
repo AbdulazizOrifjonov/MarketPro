@@ -20,6 +20,24 @@ export function errorHandler(err, req, res, next) {
     return res.status(err.statusCode).json({ error: { message: err.message, code: err.code } });
   }
 
+  // Zod validation errors
+  if (err.name === 'ZodError' || err.issues) {
+    const message = (err.issues || []).map((i) => `${i.path.join('.')}: ${i.message}`).join('; ');
+    return res.status(422).json({ error: { message: message || 'Validation error', code: 'VALIDATION_ERROR' } });
+  }
+
+  // Multer errors
+  if (err.code === 'LIMIT_FILE_SIZE') {
+    return res.status(413).json({ error: { message: 'File too large (max 15MB)', code: 'FILE_TOO_LARGE' } });
+  }
+  if (err.code === 'LIMIT_FILE_COUNT') {
+    return res.status(400).json({ error: { message: 'Too many files (max 10)', code: 'TOO_MANY_FILES' } });
+  }
+  if (err.message === 'Unsupported file type') {
+    return res.status(400).json({ error: { message: 'Unsupported file type', code: 'INVALID_FILE_TYPE' } });
+  }
+
+  // Prisma errors
   if (err.code === 'P2002') {
     return res.status(409).json({
       error: { message: `Duplicate value for: ${err.meta?.target}`, code: 'CONFLICT' },

@@ -43,12 +43,14 @@ export const getSalesAnalytics = asyncHandler(async (req, res) => {
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([date, total]) => ({ date, total }));
 
-  const monthlyMap = new Map();
-  const allOrders = await prisma.order.findMany({
+  const monthlyOrders = await prisma.order.findMany({
     where: { status: { not: 'CANCELLED' } },
     select: { createdAt: true, total: true },
+    orderBy: { createdAt: 'desc' },
+    take: 10000,
   });
-  for (const order of allOrders) {
+  const monthlyMap = new Map();
+  for (const order of monthlyOrders) {
     const month = order.createdAt.toISOString().slice(0, 7);
     monthlyMap.set(month, (monthlyMap.get(month) || 0) + order.total);
   }

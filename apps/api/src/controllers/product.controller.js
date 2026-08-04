@@ -121,9 +121,11 @@ export const listProducts = asyncHandler(async (req, res) => {
     withRatings.sort((a, b) => b.rating - a.rating);
   }
 
+  const actualTotal = minRating ? withRatings.length : total;
+
   res.json({
     products: withRatings,
-    pagination: { page: pageNum, limit: limitNum, total, pages: Math.ceil(total / limitNum) },
+    pagination: { page: pageNum, limit: limitNum, total: actualTotal, pages: Math.ceil(actualTotal / limitNum) },
   });
 });
 

@@ -8,7 +8,7 @@ const TAX_RATE = 0;
 function generateOrderNumber() {
   const date = new Date();
   const stamp = `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}`;
-  const rand = Math.floor(1000 + Math.random() * 9000);
+  const rand = Math.floor(100000 + Math.random() * 900000);
   return `MP-${stamp}-${rand}`;
 }
 

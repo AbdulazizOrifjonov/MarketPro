@@ -3,25 +3,10 @@ import { verifyOtp } from '../services/otp.service.js';
 import { AppError } from '../utils/AppError.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { signToken } from '../utils/jwt.js';
+import { publicUser, provisionCartAndWishlist } from '../utils/shared.js';
 
 function normalizePhone(phone) {
   return (phone || '').replace(/\D/g, '').replace(/^0+/, '');
-}
-
-function publicUser(user) {
-  const { passwordHash, resetToken, resetTokenExpiry, ...rest } = user;
-  return rest;
-}
-
-async function provisionCartAndWishlist(userId) {
-  const [cart, wishlist] = await Promise.all([
-    prisma.cart.findUnique({ where: { userId } }),
-    prisma.wishlist.findUnique({ where: { userId } }),
-  ]);
-  const ops = [];
-  if (!cart) ops.push(prisma.cart.create({ data: { userId } }));
-  if (!wishlist) ops.push(prisma.wishlist.create({ data: { userId } }));
-  if (ops.length) await Promise.all(ops);
 }
 
 // POST /api/auth/request-verification

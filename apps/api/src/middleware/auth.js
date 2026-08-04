@@ -38,9 +38,9 @@ export const optionalAuth = asyncHandler(async (req, res, next) => {
   next();
 });
 
-export function requireAdmin(req, res, next) {
+export const requireAdmin = (req, res, next) => {
   if (!req.user || req.user.role !== 'ADMIN') {
-    throw new AppError('Admin access required', 403, 'FORBIDDEN');
+    return next(new AppError('Admin access required', 403, 'FORBIDDEN'));
   }
   next();
-}
+};

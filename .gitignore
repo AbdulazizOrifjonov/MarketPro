@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+
+# Environment
+.env
+.env.local
+.env.production
+.env.*.local
+
+# Database
+*.db
+*.db-journal
+
+# Build
+dist/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.sw?
+
+# Uploads (local dev)
+apps/api/public/uploads/*
+!apps/api/public/uploads/.gitkeep
+
+# Logs
+*.log
+npm-debug.log*
+
+# Archives
+*.rar
+*.zip
+*.tar.gz

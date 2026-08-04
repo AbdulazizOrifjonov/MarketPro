@@ -6,7 +6,7 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 import { signToken } from '../utils/jwt.js';
 
 function publicAdmin(user) {
-  const { passwordHash, ...rest } = user;
+  const { passwordHash, credentialPassword, ...rest } = user;
   return rest;
 }
 
@@ -36,7 +36,6 @@ export const createAdminUser = asyncHandler(async (req, res) => {
       phone,
       username: username || null,
       passwordHash,
-      credentialPassword: password,
       role: 'ADMIN',
       adminLevel: 'ASSISTANT_ADMIN',
       createdByAdmin: req.user.id,
@@ -60,7 +59,6 @@ export const listAdminUsers = asyncHandler(async (req, res) => {
       email: true,
       phone: true,
       username: true,
-      credentialPassword: true,
       adminLevel: true,
       status: true,
       createdAt: true,
@@ -233,7 +231,6 @@ export const promoteToAdmin = asyncHandler(async (req, res) => {
       adminLevel: 'ASSISTANT_ADMIN',
       username,
       passwordHash,
-      credentialPassword: password,
       createdByAdmin: req.user.id,
     },
     select: {
