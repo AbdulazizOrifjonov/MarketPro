@@ -32,6 +32,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 
+app.set('trust proxy', 1);
+
 app.use(helmet({ crossOriginResourcePolicy: false }));
 
 const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173')
