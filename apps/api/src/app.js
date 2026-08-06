@@ -54,7 +54,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   '/api',
-  rateLimit({ windowMs: 60 * 1000, limit: 300, standardHeaders: true, legacyHeaders: false })
+  rateLimit({ windowMs: 60 * 1000, limit: 300, standardHeaders: true, legacyHeaders: false, validate: { xForwardedForHeader: false } })
 );
 
 app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));

@@ -13,6 +13,7 @@ const verificationLimiter = rateLimit({
   legacyHeaders: false,
   keyGenerator: (req) => req.body?.phone || req.ip,
   message: { error: { message: 'Too many requests', code: 'RATE_LIMITED' } },
+  validate: { xForwardedForHeader: false },
 });
 
 const otpLimiter = rateLimit({
@@ -20,6 +21,7 @@ const otpLimiter = rateLimit({
   limit: 20,
   standardHeaders: true,
   legacyHeaders: false,
+  validate: { xForwardedForHeader: false },
 });
 
 const requestSchema = z.object({

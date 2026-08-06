@@ -25,6 +25,7 @@ const authLimiter = rateLimit({
   limit: 20,
   standardHeaders: true,
   legacyHeaders: false,
+  validate: { xForwardedForHeader: false },
 });
 
 router.post('/register', authLimiter, validateBody(registerSchema), register);
