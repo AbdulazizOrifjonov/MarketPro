@@ -54,11 +54,24 @@ const CATEGORY_TREE = [
 
 const BRANDS = ['Samsung', 'Apple', 'Xiaomi', 'LG', 'Artel', 'Sony', 'Asus', 'HP', 'Bosch', 'Nike', 'Microsoft'];
 
-const PRODUCT_IMAGE_PLACEHOLDER = (seed) => [
-  `https://picsum.photos/seed/${seed}-1/800/800`,
-  `https://picsum.photos/seed/${seed}-2/800/800`,
-  `https://picsum.photos/seed/${seed}-3/800/800`,
+const SAMPLE_PRODUCT_IMAGES = [
+  'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=800&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1583394838336-acd977736f90?w=800&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1560343090-f0409e92791a?w=800&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=800&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=800&auto=format&fit=crop&q=80',
 ];
+
+const PRODUCT_IMAGE_PLACEHOLDER = (seed) => {
+  const hash = (seed || '').split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  const img1 = SAMPLE_PRODUCT_IMAGES[hash % SAMPLE_PRODUCT_IMAGES.length];
+  const img2 = SAMPLE_PRODUCT_IMAGES[(hash + 1) % SAMPLE_PRODUCT_IMAGES.length];
+  const img3 = SAMPLE_PRODUCT_IMAGES[(hash + 2) % SAMPLE_PRODUCT_IMAGES.length];
+  return [img1, img2, img3];
+};
 
 const PRODUCT_TEMPLATES = [
   { name: 'Galaxy S24 Ultra', cat: 'Smartphones', brand: 'Samsung', price: 14500000 },
@@ -204,9 +217,9 @@ async function main() {
 
   await prisma.sliderBanner.createMany({
     data: [
-      { title: "Yozgi chegirmalar", subtitle: "70% gacha chegirma", imageUrl: 'https://picsum.photos/seed/slider1/1600/600', link: '/catalog?onSale=true', order: 0 },
-      { title: 'Yangi smartfonlar', subtitle: "Eng so'nggi modellar", imageUrl: 'https://picsum.photos/seed/slider2/1600/600', link: '/catalog?category=smartphones', order: 1 },
-      { title: 'Gaming dunyosi', subtitle: 'Konsol va aksessuarlar', imageUrl: 'https://picsum.photos/seed/slider3/1600/600', link: '/catalog?category=gaming', order: 2 },
+      { title: "Yozgi chegirmalar", subtitle: "70% gacha chegirma", imageUrl: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1600&auto=format&fit=crop&q=80', link: '/catalog?onSale=true', order: 0 },
+      { title: 'Yangi smartfonlar', subtitle: "Eng so'nggi modellar", imageUrl: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=1600&auto=format&fit=crop&q=80', link: '/catalog?category=smartphones', order: 1 },
+      { title: 'Gaming dunyosi', subtitle: 'Konsol va aksessuarlar', imageUrl: 'https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=1600&auto=format&fit=crop&q=80', link: '/catalog?category=gaming', order: 2 },
     ],
   });
 
