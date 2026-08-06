@@ -14,33 +14,43 @@ const SAMPLE_IMAGES = [
 
 async function fixPicsumImages() {
   try {
-    const picsumImages = await prisma.productImage.findMany({
-      where: { url: { contains: 'picsum.photos' } },
+    const nonCdnImages = await prisma.productImage.findMany({
+      where: {
+        AND: [
+          { NOT: { url: { startsWith: 'https://images.unsplash.com' } } },
+          { NOT: { url: { startsWith: 'https://res.cloudinary.com' } } },
+        ],
+      },
     });
-    if (picsumImages.length > 0) {
-      console.log(`Replacing ${picsumImages.length} old picsum.photos URLs with Unsplash CDN images...`);
-      for (let i = 0; i < picsumImages.length; i++) {
+    if (nonCdnImages.length > 0) {
+      console.log(`Replacing ${nonCdnImages.length} non-CDN image URLs with Unsplash CDN images...`);
+      for (let i = 0; i < nonCdnImages.length; i++) {
         const newUrl = SAMPLE_IMAGES[i % SAMPLE_IMAGES.length];
         await prisma.productImage.update({
-          where: { id: picsumImages[i].id },
+          where: { id: nonCdnImages[i].id },
           data: { url: newUrl },
         });
       }
       console.log('All product images updated successfully!');
     }
 
-    const sliderPicsum = await prisma.sliderBanner.findMany({
-      where: { imageUrl: { contains: 'picsum.photos' } },
+    const nonCdnSliders = await prisma.sliderBanner.findMany({
+      where: {
+        AND: [
+          { NOT: { imageUrl: { startsWith: 'https://images.unsplash.com' } } },
+          { NOT: { imageUrl: { startsWith: 'https://res.cloudinary.com' } } },
+        ],
+      },
     });
-    if (sliderPicsum.length > 0) {
+    if (nonCdnSliders.length > 0) {
       const sliderImages = [
         'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1600&auto=format&fit=crop&q=80',
         'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=1600&auto=format&fit=crop&q=80',
         'https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=1600&auto=format&fit=crop&q=80',
       ];
-      for (let i = 0; i < sliderPicsum.length; i++) {
+      for (let i = 0; i < nonCdnSliders.length; i++) {
         await prisma.sliderBanner.update({
-          where: { id: sliderPicsum[i].id },
+          where: { id: nonCdnSliders[i].id },
           data: { imageUrl: sliderImages[i % sliderImages.length] },
         });
       }
