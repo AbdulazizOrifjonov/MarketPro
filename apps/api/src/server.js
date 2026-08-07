@@ -58,6 +58,8 @@ async function fixPicsumImages() {
   } catch (err) {
     console.error('Auto fix images error:', err);
   }
+}
+
 const PORT = process.env.PORT || 5000;
 
 const server = app.listen(PORT, () => {
