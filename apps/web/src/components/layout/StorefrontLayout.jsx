@@ -5,12 +5,13 @@ import { Navbar } from '@/components/layout/Navbar';
 import { CategoryQuickBar } from '@/components/layout/CategoryQuickBar';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Footer } from '@/components/layout/Footer';
+import { MobileBottomNav } from '@/components/layout/MobileBottomNav';
 
 export function StorefrontLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="flex min-h-svh flex-col">
+    <div className="flex min-h-svh flex-col pb-14 lg:pb-0">
       <TopBar />
       <Navbar onMenuClick={() => setSidebarOpen(true)} />
       <CategoryQuickBar />
@@ -19,6 +20,7 @@ export function StorefrontLayout() {
         <Outlet />
       </div>
       <Footer />
+      <MobileBottomNav />
     </div>
   );
 }
