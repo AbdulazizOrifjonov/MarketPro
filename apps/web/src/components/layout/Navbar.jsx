@@ -102,7 +102,7 @@ export function Navbar({ onMenuClick }) {
             )}
           </Link>
 
-          <Link to="/wishlist" className="relative rounded-lg p-2 hover:bg-accent" aria-label={t('nav.wishlist')}>
+          <Link to="/wishlist" className="relative hidden sm:flex rounded-lg p-2 hover:bg-accent" aria-label={t('nav.wishlist')}>
             <Heart className="h-5 w-5" />
             {wishlistCount > 0 && (
               <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
@@ -111,7 +111,7 @@ export function Navbar({ onMenuClick }) {
             )}
           </Link>
 
-          <Link to="/cart" className="relative rounded-lg p-2 hover:bg-accent" aria-label={t('nav.cart')}>
+          <Link to="/cart" className="relative hidden sm:flex rounded-lg p-2 hover:bg-accent" aria-label={t('nav.cart')}>
             <ShoppingCart className="h-5 w-5" />
             {cartCount > 0 && (
               <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
