@@ -28,8 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // 2. 3D Tilt Effect on Liquid Glass Cards
-  const tiltCards = document.querySelectorAll('.liquid-glass');
+  // 2. 3D Tilt Effect on Liquid Glass Cards (excluding fixed navbar)
+  const tiltCards = document.querySelectorAll('.liquid-glass:not(.navbar)');
 
   tiltCards.forEach((card) => {
     card.addEventListener('mousemove', (e) => {
