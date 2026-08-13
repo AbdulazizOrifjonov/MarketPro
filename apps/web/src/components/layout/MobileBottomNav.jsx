@@ -51,7 +51,7 @@ export function MobileBottomNav() {
                 isActive ? 'text-primary font-semibold' : 'text-muted-foreground hover:text-foreground'
               )}
             >
-              <div className="relative">
+              <div className={cn('relative rounded-full p-1.5 transition-colors', isActive && 'bg-primary/15')}>
                 <Icon className={cn('h-5 w-5 transition-transform', isActive && 'scale-110')} />
                 {Boolean(item.badge) && item.badge > 0 && (
                   <span className="absolute -right-2 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[9px] font-bold text-primary-foreground">

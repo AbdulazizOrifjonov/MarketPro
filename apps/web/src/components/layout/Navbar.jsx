@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Menu, Search, Heart, ShoppingCart, User, LogOut, Package, Shield, GitCompareArrows, Moon, Sun, LayoutGrid, X } from 'lucide-react';
@@ -19,6 +19,7 @@ import { cn } from '@/lib/utils';
 export function Navbar({ onMenuClick }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [catalogOpen, setCatalogOpen] = useState(false);
 
@@ -93,7 +94,7 @@ export function Navbar({ onMenuClick }) {
 
           <LanguageSwitcher />
 
-          <Link to="/compare" className="relative hidden rounded-lg p-2 hover:bg-accent sm:flex" aria-label={t('nav.compare')}>
+          <Link to="/compare" className={cn('relative hidden rounded-lg p-2 sm:flex', location.pathname === '/compare' ? 'bg-primary/15 text-primary' : 'hover:bg-accent')} aria-label={t('nav.compare')}>
             <GitCompareArrows className="h-5 w-5" />
             {compareCount > 0 && (
               <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
@@ -102,7 +103,7 @@ export function Navbar({ onMenuClick }) {
             )}
           </Link>
 
-          <Link to="/wishlist" className="relative hidden sm:flex rounded-lg p-2 hover:bg-accent" aria-label={t('nav.wishlist')}>
+          <Link to="/wishlist" className={cn('relative hidden sm:flex rounded-lg p-2', location.pathname === '/wishlist' ? 'bg-primary/15 text-primary' : 'hover:bg-accent')} aria-label={t('nav.wishlist')}>
             <Heart className="h-5 w-5" />
             {wishlistCount > 0 && (
               <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
@@ -111,7 +112,7 @@ export function Navbar({ onMenuClick }) {
             )}
           </Link>
 
-          <Link to="/cart" className="relative hidden sm:flex rounded-lg p-2 hover:bg-accent" aria-label={t('nav.cart')}>
+          <Link to="/cart" className={cn('relative hidden sm:flex rounded-lg p-2', location.pathname === '/cart' ? 'bg-primary/15 text-primary' : 'hover:bg-accent')} aria-label={t('nav.cart')}>
             <ShoppingCart className="h-5 w-5" />
             {cartCount > 0 && (
               <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
