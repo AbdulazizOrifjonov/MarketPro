@@ -53,8 +53,10 @@ export function FiltersPanel({ filters, onChange }) {
               onClick={() => selectCategory(cat.slug)}
               style={{ paddingLeft: `${cat.depth * 12}px` }}
               className={cn(
-                'block w-full rounded-md px-2 py-1.5 text-left text-sm hover:bg-accent',
-                filters.category === cat.slug && 'bg-primary font-medium text-primary-foreground'
+                'block w-full rounded-md px-2 py-1.5 text-left text-sm transition-colors',
+                filters.category === cat.slug 
+                  ? 'bg-primary/15 font-medium text-primary hover:bg-primary/20 hover:text-primary'
+                  : 'text-foreground hover:bg-primary hover:text-primary-foreground'
               )}
             >
               {localizedField(cat, 'name', i18n.language)}
@@ -112,14 +114,16 @@ export function FiltersPanel({ filters, onChange }) {
               key={r}
               onClick={() => setRating(r)}
               className={cn(
-                'flex w-full items-center gap-1 rounded-md px-2 py-1 text-sm hover:bg-accent',
-                filters.minRating === String(r) && 'bg-primary text-primary-foreground'
+                'group flex w-full items-center gap-1 rounded-md px-2 py-1 text-sm transition-colors',
+                filters.minRating === String(r)
+                  ? 'bg-primary/15 font-medium text-primary hover:bg-primary/20 hover:text-primary'
+                  : 'text-foreground hover:bg-primary hover:text-primary-foreground'
               )}
             >
               {Array.from({ length: 5 }).map((_, i) => (
-                <Star key={i} className={cn('h-3.5 w-3.5', i < r ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground/30')} />
+                <Star key={i} className={cn('h-3.5 w-3.5 transition-colors', i < r ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground/30 group-hover:text-primary-foreground/40')} />
               ))}
-              <span className="ml-1 text-muted-foreground">& up</span>
+              <span className="ml-1 text-muted-foreground transition-colors group-hover:text-primary-foreground/80">& up</span>
             </button>
           ))}
         </div>
