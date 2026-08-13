@@ -12,27 +12,27 @@ export function CategoriesShowcase() {
     <section className="mt-8">
       <h2 className="mb-3 text-lg font-bold sm:text-xl">{t('home.categories')}</h2>
       {isLoading ? (
-        <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
           {Array.from({ length: 5 }).map((_, i) => (
-            <Skeleton key={i} className="aspect-square rounded-xl" />
+            <Skeleton key={i} className="h-18 rounded-2xl" />
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
           {categories.map((cat) => (
             <Link
               key={cat.id}
               to={`/catalog?category=${cat.slug}`}
-              className="flex aspect-square flex-col items-center justify-center gap-2 rounded-xl border border-border bg-card p-3 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+              className="group flex items-center gap-3 rounded-2xl border border-border bg-card p-3 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary/5 hover:shadow-md"
             >
               {cat.imageUrl ? (
-                <img src={cat.imageUrl} alt="" className="h-10 w-10 object-contain" />
+                <img src={cat.imageUrl} alt="" className="h-12 w-12 shrink-0 object-contain transition-transform group-hover:scale-105" />
               ) : (
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary font-bold">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-lg font-bold text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
                   {localizedField(cat, 'name', i18n.language)[0]}
                 </div>
               )}
-              <span className="line-clamp-2 text-xs font-medium sm:text-sm">
+              <span className="line-clamp-2 flex-1 text-xs font-semibold sm:text-sm transition-colors group-hover:text-primary">
                 {localizedField(cat, 'name', i18n.language)}
               </span>
             </Link>
