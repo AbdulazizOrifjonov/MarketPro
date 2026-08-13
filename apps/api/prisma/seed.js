@@ -11,6 +11,7 @@ function slugify(text) {
 const CATEGORY_TREE = [
   {
     nameUz: 'Elektronika', nameRu: 'Электроника', nameEn: 'Electronics',
+    imageUrl: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=400&auto=format&fit=crop&q=80',
     children: [
       { nameUz: 'Smartfonlar', nameRu: 'Смартфоны', nameEn: 'Smartphones' },
       { nameUz: 'Noutbuklar', nameRu: 'Ноутбуки', nameEn: 'Laptops' },
@@ -22,6 +23,7 @@ const CATEGORY_TREE = [
   },
   {
     nameUz: 'Maishiy texnika', nameRu: 'Бытовая техника', nameEn: 'Home Appliances',
+    imageUrl: 'https://images.unsplash.com/photo-1584568694244-14fbdf83bd30?w=400&auto=format&fit=crop&q=80',
     children: [
       { nameUz: 'Muzlatgichlar', nameRu: 'Холодильники', nameEn: 'Refrigerators' },
       { nameUz: 'Kir yuvish mashinalari', nameRu: 'Стиральные машины', nameEn: 'Washing Machines' },
@@ -31,6 +33,7 @@ const CATEGORY_TREE = [
   },
   {
     nameUz: 'Asboblar', nameRu: 'Инструменты', nameEn: 'Tools',
+    imageUrl: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400&auto=format&fit=crop&q=80',
     children: [
       { nameUz: 'Drel mashinalar', nameRu: 'Дрели', nameEn: 'Drill Machines' },
       { nameUz: 'Qurilish asbob-uskunalari', nameRu: 'Строительное оборудование', nameEn: 'Construction Equipment' },
@@ -38,6 +41,7 @@ const CATEGORY_TREE = [
   },
   {
     nameUz: 'Gaming', nameRu: 'Гейминг', nameEn: 'Gaming',
+    imageUrl: 'https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=400&auto=format&fit=crop&q=80',
     children: [
       { nameUz: 'Konsollar', nameRu: 'Консоли', nameEn: 'Consoles' },
       { nameUz: 'Aksessuarlar', nameRu: 'Аксессуары', nameEn: 'Accessories' },
@@ -45,6 +49,7 @@ const CATEGORY_TREE = [
   },
   {
     nameUz: 'Moda', nameRu: 'Мода', nameEn: 'Fashion',
+    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&auto=format&fit=crop&q=80',
     children: [
       { nameUz: 'Erkaklar', nameRu: 'Мужчины', nameEn: 'Men' },
       { nameUz: 'Ayollar', nameRu: 'Женщины', nameEn: 'Women' },
@@ -54,56 +59,192 @@ const CATEGORY_TREE = [
 
 const BRANDS = ['Samsung', 'Apple', 'Xiaomi', 'LG', 'Artel', 'Sony', 'Asus', 'HP', 'Bosch', 'Nike', 'Microsoft'];
 
-const SAMPLE_PRODUCT_IMAGES = [
-  'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=800&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1583394838336-acd977736f90?w=800&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1560343090-f0409e92791a?w=800&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=800&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=800&auto=format&fit=crop&q=80',
-];
-
-const PRODUCT_IMAGE_PLACEHOLDER = (seed) => {
-  const hash = (seed || '').split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-  const img1 = SAMPLE_PRODUCT_IMAGES[hash % SAMPLE_PRODUCT_IMAGES.length];
-  const img2 = SAMPLE_PRODUCT_IMAGES[(hash + 1) % SAMPLE_PRODUCT_IMAGES.length];
-  const img3 = SAMPLE_PRODUCT_IMAGES[(hash + 2) % SAMPLE_PRODUCT_IMAGES.length];
-  return [img1, img2, img3];
-};
-
 const PRODUCT_TEMPLATES = [
-  { name: 'Galaxy S24 Ultra', cat: 'Smartphones', brand: 'Samsung', price: 14500000 },
-  { name: 'iPhone 15 Pro', cat: 'Smartphones', brand: 'Apple', price: 16200000 },
-  { name: 'Redmi Note 13 Pro', cat: 'Smartphones', brand: 'Xiaomi', price: 4200000 },
-  { name: 'MacBook Air M3', cat: 'Laptops', brand: 'Apple', price: 18900000 },
-  { name: 'ZenBook 14 OLED', cat: 'Laptops', brand: 'Asus', price: 11500000 },
-  { name: 'Pavilion 15', cat: 'Laptops', brand: 'HP', price: 8700000 },
-  { name: 'Galaxy Tab S9', cat: 'Tablets', brand: 'Samsung', price: 7800000 },
-  { name: 'iPad 10th Gen', cat: 'Tablets', brand: 'Apple', price: 6200000 },
-  { name: 'Watch GT 4', cat: 'Smart Watches', brand: 'Xiaomi', price: 1900000 },
-  { name: 'Galaxy Watch 6', cat: 'Smart Watches', brand: 'Samsung', price: 3100000 },
-  { name: 'No Frost RB37', cat: 'Refrigerators', brand: 'LG', price: 9800000 },
-  { name: 'Side-by-Side Inverter', cat: 'Refrigerators', brand: 'Samsung', price: 16700000 },
-  { name: 'WAJ28080BY 8kg', cat: 'Washing Machines', brand: 'Bosch', price: 5400000 },
-  { name: 'AddWash 9kg', cat: 'Washing Machines', brand: 'Samsung', price: 6900000 },
-  { name: 'SMS46GI01E', cat: 'Dishwashers', brand: 'Bosch', price: 7200000 },
-  { name: 'Inverter Split AC 12000BTU', cat: 'Air Conditioners', brand: 'LG', price: 4300000 },
-  { name: 'Artel Smart Inverter', cat: 'Air Conditioners', brand: 'Artel', price: 3600000 },
-  { name: 'Impact Drill GSB 13RE', cat: 'Drill Machines', brand: 'Bosch', price: 980000 },
-  { name: 'Cordless Drill 18V', cat: 'Drill Machines', brand: 'Bosch', price: 1450000 },
-  { name: 'Concrete Mixer 130L', cat: 'Construction Equipment', brand: 'Bosch', price: 3200000 },
-  { name: 'PlayStation 5', cat: 'Consoles', brand: 'Sony', price: 7900000 },
-  { name: 'Xbox Series X', cat: 'Consoles', brand: 'Microsoft', price: 7400000 },
-  { name: 'DualSense Wireless Controller', cat: 'Accessories', brand: 'Sony', price: 690000 },
-  { name: 'Gaming Headset Pro', cat: 'Accessories', brand: 'Asus', price: 540000 },
-  { name: 'Air Max Running Shoes', cat: 'Men', brand: 'Nike', price: 1250000 },
-  { name: 'Classic Hoodie', cat: 'Men', brand: 'Nike', price: 480000 },
-  { name: 'Running Leggings', cat: 'Women', brand: 'Nike', price: 390000 },
-  { name: 'Sport Sneakers', cat: 'Women', brand: 'Nike', price: 1100000 },
-  { name: 'OLED TV 55" C3', cat: 'Electronics', brand: 'LG', price: 12900000 },
-  { name: 'Soundbar S800', cat: 'Electronics', brand: 'Sony', price: 3400000 },
+  {
+    name: 'Galaxy S24 Ultra', cat: 'Smartphones', brand: 'Samsung', price: 14500000,
+    images: [
+      'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1580910051074-3eb694886505?w=800&auto=format&fit=crop&q=80',
+    ]
+  },
+  {
+    name: 'iPhone 15 Pro', cat: 'Smartphones', brand: 'Apple', price: 16200000,
+    images: [
+      'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=800&auto=format&fit=crop&q=80',
+    ]
+  },
+  {
+    name: 'Redmi Note 13 Pro', cat: 'Smartphones', brand: 'Xiaomi', price: 4200000,
+    images: [
+      'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=800&auto=format&fit=crop&q=80',
+    ]
+  },
+  {
+    name: 'MacBook Air M3', cat: 'Laptops', brand: 'Apple', price: 18900000,
+    images: [
+      'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=800&auto=format&fit=crop&q=80',
+    ]
+  },
+  {
+    name: 'ZenBook 14 OLED', cat: 'Laptops', brand: 'Asus', price: 11500000,
+    images: [
+      'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800&auto=format&fit=crop&q=80',
+    ]
+  },
+  {
+    name: 'Pavilion 15', cat: 'Laptops', brand: 'HP', price: 8700000,
+    images: [
+      'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800&auto=format&fit=crop&q=80',
+    ]
+  },
+  {
+    name: 'Galaxy Tab S9', cat: 'Tablets', brand: 'Samsung', price: 7800000,
+    images: [
+      'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=800&auto=format&fit=crop&q=80',
+    ]
+  },
+  {
+    name: 'iPad 10th Gen', cat: 'Tablets', brand: 'Apple', price: 6200000,
+    images: [
+      'https://images.unsplash.com/photo-1561154464-82e9adf32764?w=800&auto=format&fit=crop&q=80',
+    ]
+  },
+  {
+    name: 'Watch GT 4', cat: 'Smart Watches', brand: 'Xiaomi', price: 1900000,
+    images: [
+      'https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=800&auto=format&fit=crop&q=80',
+    ]
+  },
+  {
+    name: 'Galaxy Watch 6', cat: 'Smart Watches', brand: 'Samsung', price: 3100000,
+    images: [
+      'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&auto=format&fit=crop&q=80',
+    ]
+  },
+  {
+    name: 'No Frost RB37', cat: 'Refrigerators', brand: 'LG', price: 9800000,
+    images: [
+      'https://images.unsplash.com/photo-1584568694244-14fbdf83bd30?w=800&auto=format&fit=crop&q=80',
+    ]
+  },
+  {
+    name: 'Side-by-Side Inverter', cat: 'Refrigerators', brand: 'Samsung', price: 16700000,
+    images: [
+      'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=800&auto=format&fit=crop&q=80',
+    ]
+  },
+  {
+    name: 'WAJ28080BY 8kg', cat: 'Washing Machines', brand: 'Bosch', price: 5400000,
+    images: [
+      'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=800&auto=format&fit=crop&q=80',
+    ]
+  },
+  {
+    name: 'AddWash 9kg', cat: 'Washing Machines', brand: 'Samsung', price: 6900000,
+    images: [
+      'https://images.unsplash.com/photo-1610557892470-55d9e80c0bce?w=800&auto=format&fit=crop&q=80',
+    ]
+  },
+  {
+    name: 'SMS46GI01E', cat: 'Dishwashers', brand: 'Bosch', price: 7200000,
+    images: [
+      'https://images.unsplash.com/photo-1585837575652-267c041d77d4?w=800&auto=format&fit=crop&q=80',
+    ]
+  },
+  {
+    name: 'Inverter Split AC 12000BTU', cat: 'Air Conditioners', brand: 'LG', price: 4300000,
+    images: [
+      'https://images.unsplash.com/photo-1631545498858-a89a08e6f1f1?w=800&auto=format&fit=crop&q=80',
+    ]
+  },
+  {
+    name: 'Artel Smart Inverter', cat: 'Air Conditioners', brand: 'Artel', price: 3600000,
+    images: [
+      'https://images.unsplash.com/photo-1631545498858-a89a08e6f1f1?w=800&auto=format&fit=crop&q=80',
+    ]
+  },
+  {
+    name: 'Impact Drill GSB 13RE', cat: 'Drill Machines', brand: 'Bosch', price: 980000,
+    images: [
+      'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=800&auto=format&fit=crop&q=80',
+    ]
+  },
+  {
+    name: 'Cordless Drill 18V', cat: 'Drill Machines', brand: 'Bosch', price: 1450000,
+    images: [
+      'https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=800&auto=format&fit=crop&q=80',
+    ]
+  },
+  {
+    name: 'Concrete Mixer 130L', cat: 'Construction Equipment', brand: 'Bosch', price: 3200000,
+    images: [
+      'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&auto=format&fit=crop&q=80',
+    ]
+  },
+  {
+    name: 'PlayStation 5', cat: 'Consoles', brand: 'Sony', price: 7900000,
+    images: [
+      'https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=800&auto=format&fit=crop&q=80',
+    ]
+  },
+  {
+    name: 'Xbox Series X', cat: 'Consoles', brand: 'Microsoft', price: 7400000,
+    images: [
+      'https://images.unsplash.com/photo-1621259182978-fbf93132d53d?w=800&auto=format&fit=crop&q=80',
+    ]
+  },
+  {
+    name: 'DualSense Wireless Controller', cat: 'Accessories', brand: 'Sony', price: 690000,
+    images: [
+      'https://images.unsplash.com/photo-1600080972464-8e5f35f63d08?w=800&auto=format&fit=crop&q=80',
+    ]
+  },
+  {
+    name: 'Gaming Headset Pro', cat: 'Accessories', brand: 'Asus', price: 540000,
+    images: [
+      'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&auto=format&fit=crop&q=80',
+    ]
+  },
+  {
+    name: 'Air Max Running Shoes', cat: 'Men', brand: 'Nike', price: 1250000,
+    images: [
+      'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&auto=format&fit=crop&q=80',
+    ]
+  },
+  {
+    name: 'Classic Hoodie', cat: 'Men', brand: 'Nike', price: 480000,
+    images: [
+      'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=800&auto=format&fit=crop&q=80',
+    ]
+  },
+  {
+    name: 'Running Leggings', cat: 'Women', brand: 'Nike', price: 390000,
+    images: [
+      'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=800&auto=format&fit=crop&q=80',
+    ]
+  },
+  {
+    name: 'Sport Sneakers', cat: 'Women', brand: 'Nike', price: 1100000,
+    images: [
+      'https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&auto=format&fit=crop&q=80',
+    ]
+  },
+  {
+    name: 'OLED TV 55" C3', cat: 'Electronics', brand: 'LG', price: 12900000,
+    images: [
+      'https://images.unsplash.com/photo-1593784991095-a205069470b6?w=800&auto=format&fit=crop&q=80',
+    ]
+  },
+  {
+    name: 'Soundbar S800', cat: 'Electronics', brand: 'Sony', price: 3400000,
+    images: [
+      'https://images.unsplash.com/photo-1545454675-3531b543be5d?w=800&auto=format&fit=crop&q=80',
+    ]
+  },
 ];
 
 async function main() {
@@ -159,7 +300,7 @@ async function main() {
   for (const parent of CATEGORY_TREE) {
     const parentSlug = slugify(parent.nameEn);
     const createdParent = await prisma.category.create({
-      data: { nameUz: parent.nameUz, nameRu: parent.nameRu, nameEn: parent.nameEn, slug: parentSlug },
+      data: { nameUz: parent.nameUz, nameRu: parent.nameRu, nameEn: parent.nameEn, slug: parentSlug, imageUrl: parent.imageUrl },
     });
     categoryBySlug.set(parent.nameEn, createdParent);
 
@@ -191,6 +332,10 @@ async function main() {
     const seedSlug = `${slugify(tpl.brand)}-${slugify(tpl.name)}`;
     sku += 1;
 
+    const prodImages = tpl.images || [
+      'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=800&auto=format&fit=crop&q=80'
+    ];
+
     await prisma.product.create({
       data: {
         nameUz: `${tpl.brand} ${tpl.name}`,
@@ -210,7 +355,7 @@ async function main() {
         viewCount: Math.floor(Math.random() * 500),
         soldCount: Math.floor(Math.random() * 100),
         isFeatured: Math.random() < 0.25,
-        images: { create: PRODUCT_IMAGE_PLACEHOLDER(seedSlug).map((url, i) => ({ url, order: i })) },
+        images: { create: prodImages.map((url, i) => ({ url, order: i })) },
       },
     });
   }
