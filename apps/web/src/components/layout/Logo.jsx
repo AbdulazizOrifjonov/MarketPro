@@ -8,7 +8,7 @@ export function Logo({ size = 32, className }) {
     return (
       <img
         src="/logo.png"
-        alt="MarketPro"
+        alt="DELUX"
         width={size}
         height={size}
         onError={() => setImgFailed(true)}
@@ -23,7 +23,7 @@ export function Logo({ size = 32, className }) {
       className={cn('flex shrink-0 items-center justify-center rounded-lg bg-primary font-bold text-primary-foreground', className)}
       style={{ width: size, height: size, fontSize: size * 0.5 }}
     >
-      M
+      D
     </span>
   );
 }

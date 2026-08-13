@@ -59,11 +59,11 @@ export default function AdminLayout() {
   function SidebarContent({ isMobile = false }) {
     return (
       <>
-        <div className="flex h-14 items-center border-b border-border px-3">
+        <div className="flex h-14 items-center border-b border-white/20 px-3">
           {collapsed && !isMobile ? (
             <button
               onClick={() => setCollapsed(false)}
-              className="mx-auto cursor-pointer rounded-lg p-2 text-muted-foreground hover:bg-accent"
+              className="mx-auto cursor-pointer rounded-lg p-2 text-white/70 hover:bg-white/15"
               title="Sidebar ochish"
             >
               <PanelLeftOpen className="h-5 w-5" />
@@ -77,14 +77,14 @@ export default function AdminLayout() {
               {isMobile ? (
                 <button
                   onClick={() => setMobileOpen(false)}
-                  className="cursor-pointer rounded-lg p-1.5 text-muted-foreground hover:bg-accent"
+                  className="cursor-pointer rounded-lg p-1.5 text-white/70 hover:bg-white/15"
                 >
                   <X className="h-5 w-5" />
                 </button>
               ) : (
                 <button
                   onClick={() => setCollapsed(true)}
-                  className="cursor-pointer rounded-lg p-1.5 text-muted-foreground hover:bg-accent"
+                  className="cursor-pointer rounded-lg p-1.5 text-white/70 hover:bg-white/15"
                   title="Sidebar yopish"
                 >
                   <PanelLeftClose className="h-5 w-5" />
@@ -109,7 +109,7 @@ export default function AdminLayout() {
                     : 'gap-2.5 px-3 py-2',
                   isActive
                     ? 'bg-primary text-primary-foreground'
-                    : 'text-foreground/80 hover:bg-accent'
+                    : 'text-white/80 hover:bg-white/15'
                 )
               }
               title={collapsed && !isMobile ? label : undefined}
@@ -120,11 +120,11 @@ export default function AdminLayout() {
           ))}
         </nav>
 
-        <div className="border-t border-border p-2">
+        <div className="border-t border-white/20 p-2">
           <Link
             to="/"
             className={cn(
-              'flex items-center rounded-lg text-sm font-medium text-foreground/80 hover:bg-accent',
+              'flex items-center rounded-lg text-sm font-medium text-white/80 hover:bg-white/15',
               collapsed && !isMobile ? 'justify-center p-2.5' : 'gap-2 px-3 py-2'
             )}
             title={collapsed && !isMobile ? 'Saytga qaytish' : undefined}
@@ -142,7 +142,7 @@ export default function AdminLayout() {
       {/* Desktop sidebar */}
       <aside className={cn('hidden lg:block shrink-0 transition-all duration-200', sidebarWidth)}>
         <div className={cn(
-          'fixed top-0 left-0 z-30 flex h-svh flex-col border-r border-border bg-card transition-all duration-200',
+          'fixed top-0 left-0 z-30 flex h-svh flex-col border-r border-border bg-[#087A35] text-white transition-all duration-200',
           sidebarWidth
         )}>
           <SidebarContent />
@@ -153,7 +153,7 @@ export default function AdminLayout() {
       {mobileOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">
           <div className="absolute inset-0 bg-black/50" onClick={() => setMobileOpen(false)} />
-          <div className="absolute top-0 left-0 z-50 flex h-svh w-64 flex-col border-r border-border bg-card shadow-xl">
+          <div className="absolute top-0 left-0 z-50 flex h-svh w-64 flex-col border-r border-border bg-[#087A35] text-white shadow-xl">
             <SidebarContent isMobile />
           </div>
         </div>

@@ -7,7 +7,7 @@ export default function AuthLayout() {
       <div className="w-full max-w-md">
         <Link to="/" className="mb-6 flex items-center justify-center gap-2 text-xl font-bold">
           <Logo size={36} />
-          MarketPro
+          DELUX
         </Link>
         <div className="rounded-2xl border border-border bg-card p-6 shadow-xl sm:p-8">
           <Outlet />

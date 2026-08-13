@@ -70,7 +70,7 @@ export function ProductQA({ slug }) {
               </div>
               {q.answer && (
                 <div className="ml-6 mt-2 rounded-lg bg-muted p-3 text-sm">
-                  <span className="font-semibold text-primary">MarketPro: </span>
+                  <span className="font-semibold text-primary">DELUX: </span>
                   {q.answer}
                 </div>
               )}

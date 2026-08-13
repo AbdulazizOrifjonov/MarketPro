@@ -13,7 +13,7 @@ export function Footer() {
           <div>
             <div className="flex items-center gap-2 font-bold text-lg">
               <Logo size={32} />
-              MarketPro
+              DELUX
             </div>
             <p className="mt-3 max-w-xs text-sm text-muted-foreground">
               O'zbekiston uchun zamonaviy onlayn-do'kon — ishonchli sifat, tez yetkazib berish.
@@ -48,7 +48,7 @@ export function Footer() {
                 </li>
                 <li className="flex items-center gap-2">
                   <Mail className="h-3.5 w-3.5 shrink-0" />
-                  <a href="mailto:support@marketpro.uz" className="hover:text-primary">support@marketpro.uz</a>
+                  <a href="mailto:info@delux.uz" className="hover:text-primary">info@delux.uz</a>
                 </li>
                 <li className="flex items-center gap-2">
                   <MapPin className="h-3.5 w-3.5 shrink-0" /> Toshkent, O'zbekiston
@@ -59,7 +59,7 @@ export function Footer() {
         </div>
 
         <div className="mt-8 border-t border-border pt-6 text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} MarketPro Uzbekistan. Barcha huquqlar himoyalangan.
+          © {new Date().getFullYear()} DELUX Kompyuter & Orgtexnika. Barcha huquqlar himoyalangan.
         </div>
       </div>
     </footer>

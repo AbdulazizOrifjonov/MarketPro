@@ -56,7 +56,7 @@ export function Navbar({ onMenuClick }) {
 
         <Link to="/" className="flex shrink-0 items-center gap-2 font-bold text-lg sm:text-xl">
           <Logo size={32} />
-          <span className="hidden sm:inline">MarketPro</span>
+          <span className="hidden sm:inline">DELUX</span>
         </Link>
 
         <button
