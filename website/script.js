@@ -1,4 +1,4 @@
-// DELUX Presentation — Liquid Glass & 3D Interactive Script
+// DELUX Presentation — Apple 3D Scroll Reveal & Liquid Glass Script
 
 document.addEventListener('DOMContentLoaded', () => {
   // 1. Modal Trigger Logic ("Qanday Sotib Olish Mumkin?")
@@ -51,7 +51,26 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 3. Mouse parallax effect for Liquid Ambient Blobs
+  // 3. Apple-Style 3D Scroll Reveal Observer
+  const appleElements = document.querySelectorAll('.apple-card-3d, .apple-card-left, .apple-card-right');
+
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px 0px -100px 0px',
+    threshold: 0.15,
+  };
+
+  const appleObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('apple-revealed');
+      }
+    });
+  }, observerOptions);
+
+  appleElements.forEach((el) => appleObserver.observe(el));
+
+  // 4. Mouse parallax effect for Liquid Ambient Blobs
   document.addEventListener('mousemove', (e) => {
     const mouseX = e.clientX / window.innerWidth;
     const mouseY = e.clientY / window.innerHeight;
