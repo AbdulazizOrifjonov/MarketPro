@@ -77,7 +77,7 @@ export default function Catalog() {
       </div>
 
       <div className="flex gap-6">
-        <aside className="hidden w-64 shrink-0 lg:block">
+        <aside className="hidden w-64 shrink-0 rounded-2xl border border-primary/20 bg-primary/5 p-4 dark:bg-primary/5 lg:block">
           <FiltersPanel filters={filters} onChange={updateFilters} />
         </aside>
 
