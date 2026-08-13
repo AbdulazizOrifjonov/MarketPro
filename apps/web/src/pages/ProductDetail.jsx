@@ -222,18 +222,18 @@ export default function ProductDetail() {
               )}
             </AnimatePresence>
 
-            <Button variant="outline" size="lg" onClick={handleToggleWishlist} disabled={busy}>
+            <Button variant="outline" size="lg" onClick={handleToggleWishlist} disabled={busy} className="hover:border-primary hover:bg-primary/10 hover:text-primary transition-colors">
               <Heart className={cn('h-5 w-5', isWishlisted && 'fill-destructive text-destructive')} />
             </Button>
-            <Button variant="outline" size="lg" onClick={handleToggleCompare}>
+            <Button variant="outline" size="lg" onClick={handleToggleCompare} className="hover:border-primary hover:bg-primary/10 hover:text-primary transition-colors">
               {isComparing ? <Check className="h-5 w-5 text-primary" /> : <GitCompareArrows className="h-5 w-5" />}
             </Button>
-            <Button variant="outline" size="lg" onClick={handleShare}>
+            <Button variant="outline" size="lg" onClick={handleShare} className="hover:border-primary hover:bg-primary/10 hover:text-primary transition-colors">
               <Share2 className="h-5 w-5" />
             </Button>
           </div>
 
-          <div className="mt-5 rounded-xl border border-border bg-muted/30 p-3">
+          <div className="mt-5 rounded-2xl border border-primary/20 bg-[#EAF8EF] p-4 dark:bg-primary/5">
             <div className="mb-2.5 flex items-center gap-2">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
                 <CreditCard className="h-4 w-4 text-primary" />
@@ -264,11 +264,11 @@ export default function ProductDetail() {
           <div className="mt-6 rounded-2xl border border-border bg-card shadow-sm">
             <Tabs defaultValue="description">
               <div className="border-b border-border px-1">
-                <TabsList className="h-12 w-full justify-start gap-0 rounded-none bg-transparent p-0 overflow-x-auto scrollbar-hide">
-                  <TabsTrigger value="description" className="relative h-12 rounded-none border-b-2 border-transparent px-4 text-sm font-semibold data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none">{t('product.description')}</TabsTrigger>
-                  <TabsTrigger value="specs" className="relative h-12 rounded-none border-b-2 border-transparent px-4 text-sm font-semibold data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none">{t('product.specifications')}</TabsTrigger>
-                  <TabsTrigger value="reviews" className="relative h-12 rounded-none border-b-2 border-transparent px-4 text-sm font-semibold data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none">{t('product.reviews')} ({product.reviewCount || 0})</TabsTrigger>
-                  <TabsTrigger value="qa" className="relative h-12 rounded-none border-b-2 border-transparent px-4 text-sm font-semibold data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none">{t('product.questions_answers')}</TabsTrigger>
+                <TabsList className="h-14 w-full justify-start gap-2 rounded-none bg-transparent p-2 overflow-x-auto scrollbar-hide">
+                  <TabsTrigger value="description" className="relative h-10 rounded-full px-5 text-sm font-semibold transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md hover:bg-primary/10 hover:text-primary">{t('product.description')}</TabsTrigger>
+                  <TabsTrigger value="specs" className="relative h-10 rounded-full px-5 text-sm font-semibold transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md hover:bg-primary/10 hover:text-primary">{t('product.specifications')}</TabsTrigger>
+                  <TabsTrigger value="reviews" className="relative h-10 rounded-full px-5 text-sm font-semibold transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md hover:bg-primary/10 hover:text-primary">{t('product.reviews')} ({product.reviewCount || 0})</TabsTrigger>
+                  <TabsTrigger value="qa" className="relative h-10 rounded-full px-5 text-sm font-semibold transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md hover:bg-primary/10 hover:text-primary">{t('product.questions_answers')}</TabsTrigger>
                 </TabsList>
               </div>
 
