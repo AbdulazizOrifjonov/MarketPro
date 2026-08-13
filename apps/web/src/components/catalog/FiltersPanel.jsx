@@ -54,7 +54,7 @@ export function FiltersPanel({ filters, onChange }) {
               style={{ paddingLeft: `${cat.depth * 12}px` }}
               className={cn(
                 'block w-full rounded-md px-2 py-1.5 text-left text-sm hover:bg-accent',
-                filters.category === cat.slug && 'bg-primary/10 font-medium text-primary'
+                filters.category === cat.slug && 'bg-primary font-medium text-primary-foreground'
               )}
             >
               {localizedField(cat, 'name', i18n.language)}
@@ -113,7 +113,7 @@ export function FiltersPanel({ filters, onChange }) {
               onClick={() => setRating(r)}
               className={cn(
                 'flex w-full items-center gap-1 rounded-md px-2 py-1 text-sm hover:bg-accent',
-                filters.minRating === String(r) && 'bg-primary/10'
+                filters.minRating === String(r) && 'bg-primary text-primary-foreground'
               )}
             >
               {Array.from({ length: 5 }).map((_, i) => (

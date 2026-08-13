@@ -94,7 +94,7 @@ export function Navbar({ onMenuClick }) {
 
           <LanguageSwitcher />
 
-          <Link to="/compare" className={cn('relative hidden rounded-lg p-2 sm:flex', location.pathname === '/compare' ? 'bg-primary/15 text-primary' : 'hover:bg-accent')} aria-label={t('nav.compare')}>
+          <Link to="/compare" className={cn('relative hidden rounded-lg p-2 sm:flex', location.pathname === '/compare' ? 'bg-primary text-primary-foreground' : 'hover:bg-primary/10 hover:text-primary')} aria-label={t('nav.compare')}>
             <GitCompareArrows className="h-5 w-5" />
             {compareCount > 0 && (
               <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
@@ -103,7 +103,7 @@ export function Navbar({ onMenuClick }) {
             )}
           </Link>
 
-          <Link to="/wishlist" className={cn('relative hidden sm:flex rounded-lg p-2', location.pathname === '/wishlist' ? 'bg-primary/15 text-primary' : 'hover:bg-accent')} aria-label={t('nav.wishlist')}>
+          <Link to="/wishlist" className={cn('relative hidden sm:flex rounded-lg p-2', location.pathname === '/wishlist' ? 'bg-primary text-primary-foreground' : 'hover:bg-primary/10 hover:text-primary')} aria-label={t('nav.wishlist')}>
             <Heart className="h-5 w-5" />
             {wishlistCount > 0 && (
               <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
@@ -112,7 +112,7 @@ export function Navbar({ onMenuClick }) {
             )}
           </Link>
 
-          <Link to="/cart" className={cn('relative hidden sm:flex rounded-lg p-2', location.pathname === '/cart' ? 'bg-primary/15 text-primary' : 'hover:bg-accent')} aria-label={t('nav.cart')}>
+          <Link to="/cart" className={cn('relative hidden sm:flex rounded-lg p-2', location.pathname === '/cart' ? 'bg-primary text-primary-foreground' : 'hover:bg-primary/10 hover:text-primary')} aria-label={t('nav.cart')}>
             <ShoppingCart className="h-5 w-5" />
             {cartCount > 0 && (
               <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
