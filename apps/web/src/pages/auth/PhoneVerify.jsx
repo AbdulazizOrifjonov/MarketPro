@@ -465,29 +465,38 @@ export default function PhoneVerify() {
             </span>
           </div>
 
-          {/* Resend + back */}
-          <div className="flex gap-2">
+          {/* Resend + back + enter code */}
+          <div className="flex flex-col gap-2">
             <Button
-              variant="outline"
-              size="sm"
-              className="flex-1 gap-1.5"
-              onClick={() => { stopPolling(); setStep(STEPS.PHONE); }}
+              className="w-full gap-2 font-bold bg-primary hover:bg-primary/90"
+              onClick={() => setStep(STEPS.OTP)}
             >
-              <ArrowLeft className="h-3.5 w-3.5" />
-              Orqaga
+              Kodni kiritish →
             </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className="flex-1 gap-1.5"
-              onClick={handleResend}
-              disabled={!resendTimer.isDone || isLoading}
-            >
-              <RefreshCw className="h-3.5 w-3.5" />
-              {resendTimer.isDone
-                ? 'Qayta yuborish'
-                : `Qayta yuborish (${resendTimer.seconds}s)`}
-            </Button>
+
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex-1 gap-1.5"
+                onClick={() => { stopPolling(); setStep(STEPS.PHONE); }}
+              >
+                <ArrowLeft className="h-3.5 w-3.5" />
+                Orqaga
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex-1 gap-1.5"
+                onClick={handleResend}
+                disabled={!resendTimer.isDone || isLoading}
+              >
+                <RefreshCw className="h-3.5 w-3.5" />
+                {resendTimer.isDone
+                  ? 'Qayta yuborish'
+                  : `Qayta yuborish (${resendTimer.seconds}s)`}
+              </Button>
+            </div>
           </div>
         </div>
       )}
