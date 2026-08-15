@@ -6,6 +6,7 @@ import { CategoryQuickBar } from '@/components/layout/CategoryQuickBar';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Footer } from '@/components/layout/Footer';
 import { MobileBottomNav } from '@/components/layout/MobileBottomNav';
+import { PostPurchaseFeedbackModal } from '@/components/review/PostPurchaseFeedbackModal';
 
 export function StorefrontLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -21,6 +22,7 @@ export function StorefrontLayout() {
       </div>
       <Footer />
       <MobileBottomNav />
+      <PostPurchaseFeedbackModal />
     </div>
   );
 }

@@ -247,6 +247,7 @@ model Review {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   rating    Int
   comment   String
+  images    String   @default("[]")
   createdAt DateTime @default(now())
 
   @@index([productId])

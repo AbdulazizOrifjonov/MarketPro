@@ -11,7 +11,13 @@ export const listProductReviews = asyncHandler(async (req, res) => {
     include: { user: { select: { id: true, name: true, avatarUrl: true } } },
     orderBy: { createdAt: 'desc' },
   });
-  res.json({ reviews });
+
+  const parsedReviews = reviews.map((r) => ({
+    ...r,
+    images: typeof r.images === 'string' ? JSON.parse(r.images || '[]') : r.images || [],
+  }));
+
+  res.json({ reviews: parsedReviews });
 });
 
 export const listFeaturedReviews = asyncHandler(async (req, res) => {
@@ -24,30 +30,149 @@ export const listFeaturedReviews = asyncHandler(async (req, res) => {
     orderBy: { createdAt: 'desc' },
     take: 10,
   });
-  res.json({ reviews });
+
+  const parsedReviews = reviews.map((r) => ({
+    ...r,
+    images: typeof r.images === 'string' ? JSON.parse(r.images || '[]') : r.images || [],
+  }));
+
+  res.json({ reviews: parsedReviews });
 });
 
 export const listAllReviews = asyncHandler(async (req, res) => {
-  const { page = '1', limit = '30' } = req.query;
+  const { page = '1', limit = '30', search = '' } = req.query;
   const pageNum = Math.max(1, parseInt(page, 10) || 1);
   const limitNum = Math.min(100, Math.max(1, parseInt(limit, 10) || 30));
+
+  const where = search
+    ? {
+        OR: [
+          { comment: { contains: search, mode: 'insensitive' } },
+          { user: { name: { contains: search, mode: 'insensitive' } } },
+          { product: { nameUz: { contains: search, mode: 'insensitive' } } },
+        ],
+      }
+    : {};
+
   const [total, reviews] = await Promise.all([
-    prisma.review.count(),
+    prisma.review.count({ where }),
     prisma.review.findMany({
+      where,
       include: {
         user: { select: { id: true, name: true, avatarUrl: true } },
-        product: { select: { id: true, slug: true, nameUz: true } },
+        product: {
+          select: { id: true, slug: true, nameUz: true, images: { take: 1, orderBy: { order: 'asc' } } },
+        },
       },
       orderBy: { createdAt: 'desc' },
       skip: (pageNum - 1) * limitNum,
       take: limitNum,
     }),
   ]);
-  res.json({ reviews, pagination: { page: pageNum, limit: limitNum, total, pages: Math.ceil(total / limitNum) } });
+
+  const parsedReviews = reviews.map((r) => ({
+    ...r,
+    images: typeof r.images === 'string' ? JSON.parse(r.images || '[]') : r.images || [],
+  }));
+
+  res.json({ reviews: parsedReviews, pagination: { page: pageNum, limit: limitNum, total, pages: Math.ceil(total / limitNum) } });
+});
+
+export const getPendingFeedback = asyncHandler(async (req, res) => {
+  const userId = req.user.id;
+
+  // Find delivered orders or user orders
+  const orders = await prisma.order.findMany({
+    where: { userId, status: { in: ['DELIVERED', 'CONFIRMED', 'SHIPPING', 'PENDING'] } },
+    include: {
+      items: {
+        include: {
+          product: {
+            select: { id: true, slug: true, nameUz: true, images: { take: 1, orderBy: { order: 'asc' } } },
+          },
+        },
+      },
+    },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  // Get user's existing reviews
+  const existingReviews = await prisma.review.findMany({
+    where: { userId },
+    select: { productId: true },
+  });
+  const reviewedProductIds = new Set(existingReviews.map((r) => r.productId));
+
+  const pendingItems = [];
+  const seenProductIds = new Set();
+
+  for (const order of orders) {
+    for (const item of order.items) {
+      if (!reviewedProductIds.has(item.productId) && !seenProductIds.has(item.productId) && item.product) {
+        seenProductIds.add(item.productId);
+        pendingItems.push({
+          productId: item.productId,
+          productSlug: item.product.slug,
+          productName: item.product.nameUz,
+          productImage: item.product.images?.[0]?.url || '/placeholder.png',
+          orderId: order.id,
+          orderNumber: order.orderNumber,
+        });
+      }
+    }
+  }
+
+  res.json({ pendingItems });
+});
+
+export const getProductRatings = asyncHandler(async (req, res) => {
+  const { sort = 'desc' } = req.query; // 'desc' (highest first) or 'asc' (lowest first)
+
+  const products = await prisma.product.findMany({
+    include: {
+      category: { select: { nameUz: true } },
+      images: { take: 1, orderBy: { order: 'asc' } },
+      reviews: {
+        select: { id: true, rating: true, comment: true, createdAt: true },
+      },
+    },
+  });
+
+  const productRatings = products.map((p) => {
+    const totalReviews = p.reviews.length;
+    const sumRatings = p.reviews.reduce((acc, r) => acc + r.rating, 0);
+    const avgRating = totalReviews > 0 ? parseFloat((sumRatings / totalReviews).toFixed(1)) : 0;
+    
+    const starCounts = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+    p.reviews.forEach((r) => {
+      if (starCounts[r.rating] !== undefined) starCounts[r.rating]++;
+    });
+
+    return {
+      id: p.id,
+      nameUz: p.nameUz,
+      slug: p.slug,
+      price: p.price,
+      imageUrl: p.images?.[0]?.url || null,
+      categoryName: p.category?.nameUz || '',
+      avgRating,
+      totalReviews,
+      starCounts,
+    };
+  });
+
+  productRatings.sort((a, b) => {
+    if (sort === 'asc') {
+      return a.avgRating - b.avgRating || a.totalReviews - b.totalReviews;
+    }
+    return b.avgRating - a.avgRating || b.totalReviews - a.totalReviews;
+  });
+
+  res.json({ productRatings });
 });
 
 export const createReview = asyncHandler(async (req, res) => {
-  const { rating, comment } = req.body;
+  const { rating, comment, images } = req.body;
   const product = await prisma.product.findUnique({ where: { slug: req.params.slug } });
   if (!product) throw new AppError('Product not found', 404, 'NOT_FOUND');
 
@@ -55,18 +180,29 @@ export const createReview = asyncHandler(async (req, res) => {
     throw new AppError('Rating must be between 1 and 5', 422, 'VALIDATION_ERROR');
   }
 
-  const purchased = await prisma.orderItem.findFirst({
-    where: { productId: product.id, order: { userId: req.user.id, status: 'DELIVERED' } },
-  });
-  if (!purchased) {
-    throw new AppError('You can only review products you have purchased', 403, 'NOT_PURCHASED');
+  // Format images array (up to 3 items max)
+  let imgArray = [];
+  if (Array.isArray(images)) {
+    imgArray = images.slice(0, 3).filter((img) => typeof img === 'string' && img.trim().length > 0);
   }
 
   const review = await prisma.review.create({
-    data: { productId: product.id, userId: req.user.id, rating, comment: comment || '' },
+    data: {
+      productId: product.id,
+      userId: req.user.id,
+      rating: parseInt(rating, 10),
+      comment: comment || '',
+      images: JSON.stringify(imgArray),
+    },
     include: { user: { select: { id: true, name: true, avatarUrl: true } } },
   });
-  res.status(201).json({ review });
+
+  res.status(201).json({
+    review: {
+      ...review,
+      images: imgArray,
+    },
+  });
 });
 
 export const deleteReview = asyncHandler(async (req, res) => {
