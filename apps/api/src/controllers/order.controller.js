@@ -12,6 +12,20 @@ function generateOrderNumber() {
   return `MP-${stamp}-${rand}`;
 }
 
+const ORDER_ITEM_INCLUDE = {
+  include: {
+    product: {
+      select: {
+        id: true,
+        sku: true,
+        slug: true,
+        nameUz: true,
+        images: { take: 1, orderBy: { order: 'asc' } },
+      },
+    },
+  },
+};
+
 export const createOrder = asyncHandler(async (req, res) => {
   const { region, district, street, phone, paymentMethod, couponCode } = req.body;
   if (!region || !district || !street || !phone) {
@@ -82,7 +96,7 @@ export const createOrder = asyncHandler(async (req, res) => {
           })),
         },
       },
-      include: { items: true },
+      include: { items: ORDER_ITEM_INCLUDE },
     });
 
     for (const item of cart.items) {
@@ -112,7 +126,7 @@ export const createOrder = asyncHandler(async (req, res) => {
 export const listMyOrders = asyncHandler(async (req, res) => {
   const orders = await prisma.order.findMany({
     where: { userId: req.user.id },
-    include: { items: true },
+    include: { items: ORDER_ITEM_INCLUDE },
     orderBy: { createdAt: 'desc' },
   });
   res.json({ orders });
@@ -121,7 +135,7 @@ export const listMyOrders = asyncHandler(async (req, res) => {
 export const getMyOrder = asyncHandler(async (req, res) => {
   const order = await prisma.order.findUnique({
     where: { id: req.params.id },
-    include: { items: true },
+    include: { items: ORDER_ITEM_INCLUDE },
   });
   if (!order || order.userId !== req.user.id) throw new AppError('Order not found', 404, 'NOT_FOUND');
   res.json({ order });
@@ -142,7 +156,7 @@ export const listAllOrders = asyncHandler(async (req, res) => {
     prisma.order.count({ where }),
     prisma.order.findMany({
       where,
-      include: { items: true, user: { select: { id: true, name: true, email: true, phone: true } } },
+      include: { items: ORDER_ITEM_INCLUDE, user: { select: { id: true, name: true, email: true, phone: true } } },
       orderBy: { createdAt: 'desc' },
       skip: (pageNum - 1) * limitNum,
       take: limitNum,
@@ -155,7 +169,7 @@ export const getAdminOrder = asyncHandler(async (req, res) => {
   const order = await prisma.order.findUnique({
     where: { id: req.params.id },
     include: {
-      items: { include: { product: { select: { sku: true } } } },
+      items: ORDER_ITEM_INCLUDE,
       user: { select: { id: true, name: true, email: true, phone: true } },
     },
   });
@@ -171,7 +185,7 @@ export const updateOrderStatus = asyncHandler(async (req, res) => {
   const order = await prisma.order.update({
     where: { id: req.params.id },
     data: { status },
-    include: { items: true },
+    include: { items: ORDER_ITEM_INCLUDE },
   });
 
   await prisma.notification.create({

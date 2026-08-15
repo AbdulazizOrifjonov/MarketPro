@@ -154,18 +154,32 @@ export default function OrderDetail() {
           </h2>
         </div>
         <div className="divide-y divide-border">
-          {order.items.map((item) => (
-            <div key={item.id} className="flex gap-4 p-5">
-              <div className="flex-1">
-                <p className="font-medium">{item.name}</p>
-                <p className="text-sm text-muted-foreground">SKU: {item.product?.sku || '—'}</p>
+          {order.items.map((item) => {
+            const img = item.product?.images?.[0]?.url;
+            return (
+              <div key={item.id} className="flex items-center gap-4 p-4 sm:p-5">
+                {img ? (
+                  <img
+                    src={img}
+                    alt={item.name}
+                    className="h-16 w-16 rounded-xl object-cover border border-border shadow-sm shrink-0"
+                  />
+                ) : (
+                  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-muted text-xs text-muted-foreground border border-border">
+                    Rasm yo'q
+                  </div>
+                )}
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-foreground truncate">{item.name}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">SKU: {item.product?.sku || '—'}</p>
+                </div>
+                <div className="text-right shrink-0">
+                  <p className="font-bold text-foreground">{item.quantity} × {formatUZS(item.price)}</p>
+                  <p className="text-xs text-muted-foreground">{formatUZS(item.quantity * item.price)}</p>
+                </div>
               </div>
-              <div className="text-right">
-                <p className="font-medium">{item.quantity} x {formatUZS(item.price)}</p>
-                <p className="text-sm text-muted-foreground">{formatUZS(item.quantity * item.price)}</p>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 

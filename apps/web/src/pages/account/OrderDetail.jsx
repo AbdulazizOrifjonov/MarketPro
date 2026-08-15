@@ -78,13 +78,32 @@ export default function OrderDetail() {
 
       <div className="rounded-xl border border-border bg-card p-5">
         <h2 className="mb-3 text-base font-semibold">{t('checkout.order_summary')}</h2>
-        <div className="space-y-3">
-          {order.items.map((item) => (
-            <div key={item.id} className="flex justify-between text-sm">
-              <span>{item.name} x{item.quantity}</span>
-              <span className="font-medium">{formatUZS(item.price * item.quantity)}</span>
-            </div>
-          ))}
+        <div className="divide-y divide-border">
+          {order.items.map((item) => {
+            const img = item.product?.images?.[0]?.url;
+            return (
+              <div key={item.id} className="flex items-center gap-3 py-3 text-sm">
+                {img ? (
+                  <img
+                    src={img}
+                    alt={item.name}
+                    className="h-14 w-14 rounded-xl object-cover border border-border shrink-0"
+                  />
+                ) : (
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-muted text-xs text-muted-foreground border border-border">
+                    Rasm yo'q
+                  </div>
+                )}
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-foreground truncate">{item.name}</p>
+                  <p className="text-xs text-muted-foreground">Miqdor: {item.quantity} ta</p>
+                </div>
+                <div className="text-right shrink-0">
+                  <span className="font-bold text-foreground">{formatUZS(item.price * item.quantity)}</span>
+                </div>
+              </div>
+            );
+          })}
         </div>
         <div className="mt-4 space-y-1.5 border-t border-border pt-4 text-sm">
           <div className="flex justify-between"><span className="text-muted-foreground">{t('cart.subtotal')}</span><span>{formatUZS(order.subtotal)}</span></div>
