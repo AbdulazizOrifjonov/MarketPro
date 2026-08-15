@@ -81,9 +81,9 @@ export const listAllReviews = asyncHandler(async (req, res) => {
 export const getPendingFeedback = asyncHandler(async (req, res) => {
   const userId = req.user.id;
 
-  // Find delivered orders or user orders
+  // Find delivered orders ONLY (Admin status must be DELIVERED)
   const orders = await prisma.order.findMany({
-    where: { userId, status: { in: ['DELIVERED', 'CONFIRMED', 'SHIPPING', 'PENDING'] } },
+    where: { userId, status: 'DELIVERED' },
     include: {
       items: {
         include: {
@@ -175,6 +175,24 @@ export const createReview = asyncHandler(async (req, res) => {
   const { rating, comment, images } = req.body;
   const product = await prisma.product.findUnique({ where: { slug: req.params.slug } });
   if (!product) throw new AppError('Product not found', 404, 'NOT_FOUND');
+
+  if (req.user.role !== 'ADMIN') {
+    const deliveredOrder = await prisma.order.findFirst({
+      where: {
+        userId: req.user.id,
+        status: 'DELIVERED',
+        items: { some: { productId: product.id } },
+      },
+    });
+
+    if (!deliveredOrder) {
+      throw new AppError(
+        "Mahsulot hali yetkazilmadi. Admin tomonidan 'Yetkazildi' holatiga o'tkazilgach baholashingiz mumkin.",
+        403,
+        'NOT_DELIVERED_YET'
+      );
+    }
+  }
 
   if (!rating || rating < 1 || rating > 5) {
     throw new AppError('Rating must be between 1 and 5', 422, 'VALIDATION_ERROR');
