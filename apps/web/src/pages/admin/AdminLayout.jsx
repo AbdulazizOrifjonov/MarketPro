@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { NavLink, Outlet, Link } from 'react-router-dom';
+import { NavLink, Outlet, Link, useLocation, Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
   LayoutDashboard, Package, FolderTree, ShoppingBag, Users, Image, Tag, BarChart3,
@@ -14,12 +14,15 @@ import { api } from '@/lib/api';
 export default function AdminLayout() {
   const { t } = useTranslation();
   const user = useAuthStore((s) => s.user);
+  const location = useLocation();
   const [adminCount, setAdminCount] = useState(0);
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  const isSuperAdmin = user?.adminLevel === 'SUPER_ADMIN';
+
   useEffect(() => {
-    if (user?.adminLevel === 'SUPER_ADMIN') {
+    if (isSuperAdmin) {
       api
         .get('/admin-users')
         .then(({ data }) => {
@@ -30,10 +33,23 @@ export default function AdminLayout() {
         })
         .catch(() => {});
     }
-  }, [user]);
+  }, [isSuperAdmin]);
 
-  const baseLinks = [
+  // Assistant admin cannot access Dashboard, Analytics, or Admin-Users
+  if (!isSuperAdmin && (
+    location.pathname === '/admin' ||
+    location.pathname === '/admin/' ||
+    location.pathname.startsWith('/admin/analytics') ||
+    location.pathname.startsWith('/admin/admin-users')
+  )) {
+    return <Navigate to="/admin/products" replace />;
+  }
+
+  const superAdminDashboardLink = [
     { to: '/admin', icon: LayoutDashboard, label: t('admin.dashboard'), end: true },
+  ];
+
+  const commonLinks = [
     { to: '/admin/products', icon: Package, label: t('admin.products') },
     { to: '/admin/categories', icon: FolderTree, label: t('admin.categories') },
     { to: '/admin/brands', icon: Aperture, label: 'Brendlar' },
@@ -43,16 +59,16 @@ export default function AdminLayout() {
     { to: '/admin/sliders', icon: Image, label: t('admin.sliders') },
     { to: '/admin/coupons', icon: Tag, label: t('admin.coupons') },
     { to: '/admin/flash-sale', icon: Zap, label: t('admin.flash_sale') },
-    { to: '/admin/analytics', icon: BarChart3, label: t('admin.analytics') },
   ];
 
-  const links = user?.adminLevel === 'SUPER_ADMIN'
-    ? [...baseLinks, {
-        to: '/admin/admin-users',
-        icon: Crown,
-        label: `Yordamchi admin (${adminCount})`
-      }]
-    : baseLinks;
+  const superAdminExtraLinks = [
+    { to: '/admin/analytics', icon: BarChart3, label: t('admin.analytics') },
+    { to: '/admin/admin-users', icon: Crown, label: `Yordamchi admin (${adminCount})` },
+  ];
+
+  const links = isSuperAdmin
+    ? [...superAdminDashboardLink, ...commonLinks, ...superAdminExtraLinks]
+    : commonLinks;
 
   const sidebarWidth = collapsed ? 'w-[68px]' : 'w-60';
 
