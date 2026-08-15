@@ -6,6 +6,7 @@ import AuthLayout from '@/pages/auth/AuthLayout';
 import Home from '@/pages/Home';
 import Catalog from '@/pages/Catalog';
 import ProductDetail from '@/pages/ProductDetail';
+import ProductReviewPage from '@/pages/ProductReviewPage';
 import Cart from '@/pages/Cart';
 import Wishlist from '@/pages/Wishlist';
 import Compare from '@/pages/Compare';
@@ -68,6 +69,7 @@ function App() {
           <Route path="/compare" element={<Compare />} />
 
           <Route element={<ProtectedRoute />}>
+            <Route path="/review-product/:slug" element={<ProductReviewPage />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/account" element={<AccountLayout />}>
               <Route path="profile" element={<Profile />} />
