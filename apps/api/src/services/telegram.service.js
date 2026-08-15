@@ -7,13 +7,17 @@ let bot = null;
 
 export function getBot() { return bot; }
 
+export function stopBot() {
+  if (bot) {
+    try { bot.stop(); } catch (e) {}
+  }
+}
+
 function normalizePhone(p) {
   return (p || '').replace(/\D/g, '').replace(/^0+/, '');
 }
 
 // ─── THE contact-request keyboard ────────────────────────────────────────────
-// ReplyKeyboardMarkup with request_contact: true
-// This is the ONLY way to get the native "Share Phone Number" button.
 const SHARE_KEYBOARD = Markup.keyboard([
   [Markup.button.contactRequest('📱 Telefon raqamni ulashish')],
 ])
@@ -32,7 +36,7 @@ async function onStart(ctx) {
   // Always show the keyboard right away — no DB dependency for this step
   await ctx.replyWithHTML(
     '👋 Salom!\n\n' +
-    '<b>MarketPro</b> ga xush kelibsiz.\n\n' +
+    '<b>DELUX</b> ga xush kelibsiz.\n\n' +
     'Tasdiqlash kodini olish uchun quyidagi tugmani bosing 👇',
     SHARE_KEYBOARD
   );
@@ -58,25 +62,49 @@ async function onContact(ctx) {
   const chatId = ctx.chat.id;
   const contact = ctx.message.contact;
   const telegramId = String(contact.user_id ?? ctx.from.id);
+  const tgPhone = normalizePhone(contact.phone_number);
+  const fullTgPhone = `+${tgPhone}`;
 
-  console.log(`[Bot] contact  chatId=${chatId}  phone=${contact.phone_number}  tgId=${telegramId}`);
+  console.log(`[Bot] contact  chatId=${chatId}  phone=${contact.phone_number} (${fullTgPhone})  tgId=${telegramId}`);
 
-  // Find the pending session linked to this chat
-  const session = await prisma.verificationSession.findFirst({
+  // 1. Try to find the pending session by chatId
+  let session = await prisma.verificationSession.findFirst({
     where: { chatId: String(chatId), status: 'PENDING', expiresAt: { gt: new Date() } },
     orderBy: { createdAt: 'desc' },
   });
 
+  // 2. Fallback: Try to find pending session by phone number matching tgPhone!
+  if (!session) {
+    session = await prisma.verificationSession.findFirst({
+      where: {
+        OR: [
+          { phone: fullTgPhone },
+          { phone: tgPhone },
+        ],
+        status: 'PENDING',
+        expiresAt: { gt: new Date() },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    if (session) {
+      // Link chatId to session now
+      await prisma.verificationSession.update({
+        where: { id: session.id },
+        data: { chatId: String(chatId) },
+      }).catch((e) => console.warn('[Bot] session update chatId error:', e.message));
+    }
+  }
+
   if (!session) {
     await ctx.reply(
-      '❌ Faol session topilmadi.\nSaytga qaytib qaytadan boshlang.',
+      '❌ Faol tasdiqlash sessiyasi topilmadi.\n\nSaytga qaytib raqamingizni kiriting va qaytadan boshlang.',
       Markup.removeKeyboard()
     );
     return;
   }
 
   // Compare phone numbers
-  const tgPhone      = normalizePhone(contact.phone_number);
   const sessionPhone = normalizePhone(session.phone);
 
   if (tgPhone !== sessionPhone) {
@@ -115,7 +143,7 @@ async function onContact(ctx) {
   // Generate OTP
   const otp       = generateOtp();
   const otpHash   = await hashOtp(otp);
-  const expiresAt = new Date(Date.now() + 3 * 60_000); // 3 minutes
+  const expiresAt = new Date(Date.now() + 5 * 60_000); // 5 minutes
 
   await prisma.$transaction(async (tx) => {
     await tx.otpVerification.deleteMany({ where: { sessionId: session.id } });
@@ -133,12 +161,12 @@ async function onContact(ctx) {
     `✅ <b>Telefon tasdiqlandi!</b>\n\n` +
     `🔑 Tasdiqlash kodingiz:\n\n` +
     `<code>${otp}</code>\n\n` +
-    `⏱ <b>3 daqiqa</b> ichida amal qiladi.\n\n` +
+    `⏱ <b>5 daqiqa</b> ichida amal qiladi.\n\n` +
     `⚠️ <i>Kodni hech kimga bermang!</i>`,
     Markup.removeKeyboard()
   );
 
-  console.log(`[Bot] OTP sent  chatId=${chatId}`);
+  console.log(`[Bot] ✓ OTP sent successfully to chatId=${chatId}`);
 }
 
 // ─── Other messages ───────────────────────────────────────────────────────────
@@ -146,12 +174,22 @@ async function onMessage(ctx) {
   if (ctx.chat.type !== 'private') return;
   if (ctx.message.contact) return;
 
+  const chatId = String(ctx.chat.id);
+  const tgPhone = normalizePhone(ctx.from.phone_number || '');
+
   const has = await prisma.verificationSession.count({
-    where: { chatId: String(ctx.chat.id), status: 'PENDING', expiresAt: { gt: new Date() } },
+    where: {
+      OR: [
+        { chatId },
+        { phone: `+${tgPhone}` },
+      ],
+      status: 'PENDING',
+      expiresAt: { gt: new Date() },
+    },
   });
 
   if (has) {
-    await ctx.reply('👆 Quyidagi tugmani bosing:', SHARE_KEYBOARD);
+    await ctx.reply('👆 Tasdiqlash uchun quyidagi tugmani bosing:', SHARE_KEYBOARD);
   } else {
     await ctx.reply('ℹ️ Tasdiqlash uchun saytdan boshlang.', Markup.removeKeyboard());
   }
@@ -174,14 +212,9 @@ export function startBot() {
 
   bot
     .launch({ dropPendingUpdates: true })
-    .then(() => console.log('[Bot] ✓ ishga tushdi'))
+    .then(() => console.log('[Bot] ✓ DELUX Telegram Bot ishga tushdi'))
     .catch((err) => console.error('[Bot] ✗ ishga tushmadi:', err.message));
 
   process.once('SIGINT',  () => bot.stop('SIGINT'));
   process.once('SIGTERM', () => bot.stop('SIGTERM'));
-}
-
-export function stopBot() {
-  bot?.stop();
-  bot = null;
 }

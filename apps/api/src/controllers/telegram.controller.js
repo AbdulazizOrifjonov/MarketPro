@@ -58,7 +58,7 @@ export const requestVerification = asyncHandler(async (req, res) => {
     data: {
       phone: fullPhone,
       email: email || undefined,
-      expiresAt: new Date(Date.now() + 5 * 60_000),
+      expiresAt: new Date(Date.now() + 10 * 60_000),
     },
   });
 
