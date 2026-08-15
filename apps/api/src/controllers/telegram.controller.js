@@ -171,32 +171,40 @@ export const verifyOtpHandler = asyncHandler(async (req, res) => {
     }
   }
 
-  // OTP valid! Find or create user
+  // OTP valid! Find or create user with unified account linking
   const phone = session.phone;
-  const email = session.email;
+  const normalizedEmail = session.email ? session.email.trim().toLowerCase() : undefined;
 
   let user = await prisma.user.findFirst({
     where: {
       OR: [
         { phone },
-        { email: email || undefined }
-      ].filter(Boolean)
-    }
+        { email: normalizedEmail || undefined },
+      ].filter(Boolean),
+    },
   });
 
   if (!user) {
-    const rawName = email ? email.split('@')[0] : `User_${phone.slice(-4)}`;
+    const rawName = normalizedEmail ? normalizedEmail.split('@')[0] : `User_${phone.slice(-4)}`;
     const formattedName = rawName.charAt(0).toUpperCase() + rawName.slice(1);
 
     user = await prisma.user.create({
       data: {
         phone,
-        email: email || undefined,
+        email: normalizedEmail || undefined,
         name: formattedName,
         passwordHash: '',
         role: 'CUSTOMER',
       },
     });
+  } else {
+    // Link phone and email to existing account (e.g. Google user)
+    const updates = {};
+    if (!user.phone) updates.phone = phone;
+    if (!user.email && normalizedEmail) updates.email = normalizedEmail;
+    if (Object.keys(updates).length > 0) {
+      user = await prisma.user.update({ where: { id: user.id }, data: updates });
+    }
   }
 
   // Mark session completed
@@ -210,6 +218,7 @@ export const verifyOtpHandler = asyncHandler(async (req, res) => {
 
   const token = signToken({
     id: user.id,
+    sub: user.id,
     role: user.role,
     adminLevel: user.adminLevel,
   });

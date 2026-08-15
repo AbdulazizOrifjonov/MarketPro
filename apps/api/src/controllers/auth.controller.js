@@ -13,25 +13,39 @@ const googleClient = process.env.GOOGLE_CLIENT_ID
 
 export const register = asyncHandler(async (req, res) => {
   const { name, email, password, phone } = req.body;
+  const normalizedEmail = (email || '').trim().toLowerCase();
 
-  const existing = await prisma.user.findUnique({ where: { email } });
+  const existing = await prisma.user.findUnique({ where: { email: normalizedEmail } });
   if (existing) throw new AppError('Email already registered', 409, 'EMAIL_TAKEN');
 
   const passwordHash = await bcrypt.hash(password, 12);
   const user = await prisma.user.create({
-    data: { name, email, passwordHash, phone, role: 'CUSTOMER' },
+    data: {
+      name,
+      email: normalizedEmail,
+      passwordHash,
+      phone: phone ? phone.trim() : undefined,
+      role: 'CUSTOMER',
+    },
   });
   await provisionCartAndWishlist(user.id);
 
-  const token = signToken({ sub: user.id, role: user.role });
+  const token = signToken({ id: user.id, sub: user.id, role: user.role });
   res.status(201).json({ token, user: publicUser(user) });
 });
 
 export const login = asyncHandler(async (req, res) => {
   const { identifier, password } = req.body;
+  const normalizedId = (identifier || '').trim().toLowerCase();
 
   const user = await prisma.user.findFirst({
-    where: { OR: [{ email: identifier }, { username: identifier }] },
+    where: {
+      OR: [
+        { email: normalizedId },
+        { username: normalizedId },
+        { phone: identifier ? identifier.trim() : undefined },
+      ].filter(Boolean),
+    },
   });
   if (!user || !user.passwordHash) {
     throw new AppError('Invalid credentials', 401, 'INVALID_CREDENTIALS');
@@ -41,7 +55,7 @@ export const login = asyncHandler(async (req, res) => {
   const valid = await bcrypt.compare(password, user.passwordHash);
   if (!valid) throw new AppError('Invalid credentials', 401, 'INVALID_CREDENTIALS');
 
-  const token = signToken({ sub: user.id, role: user.role });
+  const token = signToken({ id: user.id, sub: user.id, role: user.role });
   res.json({ token, user: publicUser(user) });
 });
 
@@ -58,36 +72,43 @@ export const googleAuth = asyncHandler(async (req, res) => {
   const payload = ticket.getPayload();
   if (!payload?.email) throw new AppError('Invalid Google token', 401, 'INVALID_TOKEN');
 
+  const googleEmail = payload.email.trim().toLowerCase();
+
   let user = await prisma.user.findFirst({
-    where: { OR: [{ googleId: payload.sub }, { email: payload.email }] },
+    where: { OR: [{ googleId: payload.sub }, { email: googleEmail }] },
   });
 
   if (!user) {
     user = await prisma.user.create({
       data: {
-        name: payload.name || payload.email.split('@')[0],
-        email: payload.email,
+        name: payload.name || googleEmail.split('@')[0],
+        email: googleEmail,
         googleId: payload.sub,
         avatarUrl: payload.picture,
         role: 'CUSTOMER',
       },
     });
     await provisionCartAndWishlist(user.id);
-  } else if (!user.googleId) {
-    user = await prisma.user.update({ where: { id: user.id }, data: { googleId: payload.sub } });
+  } else {
+    // Unified account linking: merge googleId & avatar if missing
+    const updates = {};
+    if (!user.googleId) updates.googleId = payload.sub;
+    if (!user.avatarUrl && payload.picture) updates.avatarUrl = payload.picture;
+    if (Object.keys(updates).length > 0) {
+      user = await prisma.user.update({ where: { id: user.id }, data: updates });
+    }
   }
 
   if (user.status === 'BANNED') throw new AppError('Account banned', 403, 'BANNED');
 
-  const token = signToken({ sub: user.id, role: user.role });
+  const token = signToken({ id: user.id, sub: user.id, role: user.role });
   res.json({ token, user: publicUser(user) });
 });
 
 export const forgotPassword = asyncHandler(async (req, res) => {
   const { email } = req.body;
-  const user = await prisma.user.findUnique({ where: { email } });
+  const user = await prisma.user.findUnique({ where: { email: (email || '').trim().toLowerCase() } });
 
-  // Always respond 200 to avoid leaking which emails are registered.
   if (!user) return res.json({ message: 'If that email exists, a reset link has been sent.' });
 
   const resetToken = crypto.randomBytes(32).toString('hex');
@@ -97,9 +118,7 @@ export const forgotPassword = asyncHandler(async (req, res) => {
     data: { resetToken, resetTokenExpiry },
   });
 
-  // Email delivery wired via nodemailer/SMTP env vars; logged here until SMTP creds are supplied.
   console.log(`[password-reset] token for ${email}: ${resetToken}`);
-
   res.json({ message: 'If that email exists, a reset link has been sent.' });
 });
 
