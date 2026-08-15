@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { toast } from 'sonner';
 import { api } from '@/lib/api';
 import { useAuthStore } from '@/store/authStore';
 import { useCartStore } from '@/store/cartStore';
@@ -69,11 +70,17 @@ export const useWishlistStore = create((set, get) => ({
       const updated = { ...current, items };
       setGuestWishlist(updated);
       set({ wishlist: updated });
+      toast.success('❤️ Mahsulot sevimlilarga qo\'shildi!');
       return;
     }
 
-    const { data } = await api.post('/wishlist/items', { productId });
-    set({ wishlist: data.wishlist });
+    try {
+      const { data } = await api.post('/wishlist/items', { productId });
+      set({ wishlist: data.wishlist });
+      toast.success('❤️ Mahsulot sevimlilarga qo\'shildi!');
+    } catch (err) {
+      toast.error(err.friendlyMessage || 'Xatolik yuz berdi');
+    }
   },
 
   removeItem: async (productId) => {
@@ -84,11 +91,17 @@ export const useWishlistStore = create((set, get) => ({
       const updated = { ...current, items };
       setGuestWishlist(updated);
       set({ wishlist: updated });
+      toast.info('🤍 Mahsulot sevimlilardan olib tashlandi');
       return;
     }
 
-    const { data } = await api.delete(`/wishlist/items/${productId}`);
-    set({ wishlist: data.wishlist });
+    try {
+      const { data } = await api.delete(`/wishlist/items/${productId}`);
+      set({ wishlist: data.wishlist });
+      toast.info('🤍 Mahsulot sevimlilardan olib tashlandi');
+    } catch (err) {
+      toast.error(err.friendlyMessage || 'Xatolik yuz berdi');
+    }
   },
 
   moveToCart: async (productId) => {
@@ -96,11 +109,17 @@ export const useWishlistStore = create((set, get) => ({
     if (!isAuth) {
       await get().removeItem(productId);
       await useCartStore.getState().addItem(productId, 1);
+      toast.success('🛒 Mahsulot savatga o\'tkazildi!');
       return;
     }
 
-    await api.post(`/wishlist/items/${productId}/move-to-cart`);
-    await get().fetchWishlist();
+    try {
+      await api.post(`/wishlist/items/${productId}/move-to-cart`);
+      await get().fetchWishlist();
+      toast.success('🛒 Mahsulot savatga o\'tkazildi!');
+    } catch (err) {
+      toast.error(err.friendlyMessage || 'Xatolik yuz berdi');
+    }
   },
 
   reset: () => set({ wishlist: getGuestWishlist() }),

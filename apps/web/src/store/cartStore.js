@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { toast } from 'sonner';
 import { api } from '@/lib/api';
 import { useAuthStore } from '@/store/authStore';
 
@@ -68,14 +69,17 @@ export const useCartStore = create((set, get) => ({
       const updated = { ...current, items };
       setGuestCart(updated);
       set({ cart: updated });
+      toast.success('🛒 Mahsulot savatga qo\'shildi!');
       return;
     }
 
     try {
       const { data } = await api.post('/cart/items', { productId, quantity });
       set({ cart: data.cart });
+      toast.success('🛒 Mahsulot savatga qo\'shildi!');
     } catch (err) {
       console.error('addItem error:', err);
+      toast.error(err.friendlyMessage || 'Savatga qo\'shishda xatolik');
       throw err;
     }
   },
@@ -87,6 +91,7 @@ export const useCartStore = create((set, get) => ({
       let items = [...(current.items || [])];
       if (quantity <= 0) {
         items = items.filter((i) => i.id !== itemId && i.productId !== itemId);
+        toast.info('🗑️ Mahsulot savatdan olib tashlandi');
       } else {
         const item = items.find((i) => i.id === itemId || i.productId === itemId);
         if (item) item.quantity = quantity;
@@ -97,8 +102,15 @@ export const useCartStore = create((set, get) => ({
       return;
     }
 
-    const { data } = await api.patch(`/cart/items/${itemId}`, { quantity });
-    set({ cart: data.cart });
+    try {
+      const { data } = await api.patch(`/cart/items/${itemId}`, { quantity });
+      set({ cart: data.cart });
+      if (quantity <= 0) {
+        toast.info('🗑️ Mahsulot savatdan olib tashlandi');
+      }
+    } catch (err) {
+      toast.error(err.friendlyMessage || 'Xatolik yuz berdi');
+    }
   },
 
   removeItem: async (itemId) => {
@@ -109,11 +121,17 @@ export const useCartStore = create((set, get) => ({
       const updated = { ...current, items };
       setGuestCart(updated);
       set({ cart: updated });
+      toast.info('🗑️ Mahsulot savatdan olib tashlandi');
       return;
     }
 
-    const { data } = await api.delete(`/cart/items/${itemId}`);
-    set({ cart: data.cart });
+    try {
+      const { data } = await api.delete(`/cart/items/${itemId}`);
+      set({ cart: data.cart });
+      toast.info('🗑️ Mahsulot savatdan olib tashlandi');
+    } catch (err) {
+      toast.error(err.friendlyMessage || 'Xatolik yuz berdi');
+    }
   },
 
   clearCart: async () => {
@@ -121,11 +139,17 @@ export const useCartStore = create((set, get) => ({
     if (!isAuth) {
       localStorage.removeItem('delux_guest_cart');
       set({ cart: { items: [] } });
+      toast.info('🗑️ Savat tozalandi');
       return;
     }
 
-    const { data } = await api.delete('/cart');
-    set({ cart: data.cart });
+    try {
+      const { data } = await api.delete('/cart');
+      set({ cart: data.cart });
+      toast.info('🗑️ Savat tozalandi');
+    } catch (err) {
+      toast.error(err.friendlyMessage || 'Xatolik yuz berdi');
+    }
   },
 
   reset: () => set({ cart: getGuestCart() }),
