@@ -16,7 +16,7 @@ export function ProtectedRoute({ adminOnly = false }) {
   if (!isAuthenticated) {
     return <Navigate to="/login" replace state={{ from: location.pathname }} />;
   }
-  if (adminOnly && user?.role !== 'ADMIN') {
+  if (adminOnly && (!user?.adminLevel || !['SUPER_ADMIN', 'ASSISTANT_ADMIN'].includes(user.adminLevel))) {
     return <Navigate to="/" replace />;
   }
   return <Outlet />;

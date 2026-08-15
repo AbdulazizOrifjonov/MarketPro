@@ -171,16 +171,22 @@ export const verifyOtpHandler = asyncHandler(async (req, res) => {
     }
   }
 
-  // OTP valid! Find or create user with unified account linking
+  // OTP valid! Find or create user with unified account linking (EXCLUDING admin accounts!)
   const phone = session.phone;
   const normalizedEmail = session.email ? session.email.trim().toLowerCase() : undefined;
 
+  // Search for regular customer user matching phone or email
   let user = await prisma.user.findFirst({
     where: {
       OR: [
         { phone },
         { email: normalizedEmail || undefined },
       ].filter(Boolean),
+      NOT: [
+        { username: '1234' },
+        { role: 'ADMIN' },
+        { adminLevel: { in: ['SUPER_ADMIN', 'ASSISTANT_ADMIN'] } },
+      ],
     },
   });
 
@@ -195,10 +201,11 @@ export const verifyOtpHandler = asyncHandler(async (req, res) => {
         name: formattedName,
         passwordHash: '',
         role: 'CUSTOMER',
+        adminLevel: null,
       },
     });
   } else {
-    // Link phone and email to existing account (e.g. Google user)
+    // Link phone and email to existing CUSTOMER account
     const updates = {};
     if (!user.phone) updates.phone = phone;
     if (!user.email && normalizedEmail) updates.email = normalizedEmail;
