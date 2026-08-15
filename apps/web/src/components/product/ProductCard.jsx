@@ -46,10 +46,9 @@ export const ProductCard = memo(function ProductCard({ product }) {
 
   async function handleAddToCart(e) {
     e.preventDefault();
-    if (!requireAuth()) return;
     setBusy(true);
     try {
-      await addItem(product.id, 1);
+      await addItem(product.id, 1, product);
       toast.success(t('product.added_to_cart'));
     } catch {
       toast.error(t('common.error_occurred'));
@@ -64,7 +63,7 @@ export const ProductCard = memo(function ProductCard({ product }) {
     const nextQty = cartItem.quantity + delta;
     setBusy(true);
     try {
-      await updateQuantity(cartItem.id, nextQty);
+      await updateQuantity(cartItem.id || cartItem.productId, nextQty);
       if (nextQty <= 0) toast.success(t('product.removed_from_cart'));
     } catch {
       toast.error(t('common.error_occurred'));
@@ -75,14 +74,13 @@ export const ProductCard = memo(function ProductCard({ product }) {
 
   async function handleToggleWishlist(e) {
     e.preventDefault();
-    if (!requireAuth()) return;
     setBusy(true);
     try {
       if (isWishlisted) {
         await wishlistRemove(product.id);
         toast.success(t('product.removed_from_wishlist'));
       } else {
-        await wishlistAdd(product.id);
+        await wishlistAdd(product.id, product);
         toast.success(t('product.added_to_wishlist'));
       }
     } catch {

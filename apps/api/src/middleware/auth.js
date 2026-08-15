@@ -16,7 +16,10 @@ export const authenticate = asyncHandler(async (req, res, next) => {
     throw new AppError('Invalid or expired token', 401, 'INVALID_TOKEN');
   }
 
-  const user = await prisma.user.findUnique({ where: { id: payload.sub } });
+  const userId = payload.id || payload.sub;
+  if (!userId) throw new AppError('Invalid token payload', 401, 'INVALID_TOKEN');
+
+  const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user) throw new AppError('User not found', 401, 'UNAUTHENTICATED');
   if (user.status === 'BANNED') throw new AppError('Account banned', 403, 'BANNED');
 
@@ -29,8 +32,11 @@ export const optionalAuth = asyncHandler(async (req, res, next) => {
   if (header && header.startsWith('Bearer ')) {
     try {
       const payload = verifyToken(header.split(' ')[1]);
-      const user = await prisma.user.findUnique({ where: { id: payload.sub } });
-      if (user && user.status !== 'BANNED') req.user = user;
+      const userId = payload.id || payload.sub;
+      if (userId) {
+        const user = await prisma.user.findUnique({ where: { id: userId } });
+        if (user && user.status !== 'BANNED') req.user = user;
+      }
     } catch {
       // ignore invalid token for optional auth
     }

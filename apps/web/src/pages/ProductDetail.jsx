@@ -63,10 +63,9 @@ export default function ProductDetail() {
   }
 
   async function handleAddToCart() {
-    if (!requireAuth()) return;
     setBusy(true);
     try {
-      await addItem(product.id, 1);
+      await addItem(product.id, 1, product);
       toast.success(t('product.added_to_cart'));
     } catch (err) {
       toast.error(err.friendlyMessage);
@@ -79,21 +78,20 @@ export default function ProductDetail() {
     if (!cartItem) return;
     setBusy(true);
     try {
-      await updateQuantity(cartItem.id, cartItem.quantity + delta);
+      await updateQuantity(cartItem.id || cartItem.productId, cartItem.quantity + delta);
     } finally {
       setBusy(false);
     }
   }
 
   async function handleToggleWishlist() {
-    if (!requireAuth()) return;
     setBusy(true);
     try {
       if (isWishlisted) {
         await wishlistRemove(product.id);
         toast.success(t('product.removed_from_wishlist'));
       } else {
-        await wishlistAdd(product.id);
+        await wishlistAdd(product.id, product);
         toast.success(t('product.added_to_wishlist'));
       }
     } finally {
