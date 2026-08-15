@@ -17,7 +17,16 @@ export function PostPurchaseFeedbackModal() {
       return;
     }
 
-    // Always check for pending delivered feedback on login / page refresh
+    // Check if user already dismissed/closed the banner TODAY
+    const todayStr = new Date().toISOString().split('T')[0]; // "YYYY-MM-DD"
+    const dismissedDate = localStorage.getItem('delux_feedback_dismissed_date');
+
+    if (dismissedDate === todayStr) {
+      setShowBanner(false);
+      return;
+    }
+
+    // Check for pending delivered feedback from backend
     api
       .get('/reviews/pending-feedback')
       .then(({ data }) => {
@@ -35,6 +44,13 @@ export function PostPurchaseFeedbackModal() {
 
   const currentItem = pendingItems[0];
 
+  function handleDismiss(e) {
+    if (e) e.stopPropagation();
+    const todayStr = new Date().toISOString().split('T')[0];
+    localStorage.setItem('delux_feedback_dismissed_date', todayStr);
+    setShowBanner(false);
+  }
+
   function handleGoToAccountReviews(e) {
     if (e) e.stopPropagation();
     navigate('/account/reviews');
@@ -47,12 +63,9 @@ export function PostPurchaseFeedbackModal() {
     >
       {/* Top-Right Corner Close 'X' Button */}
       <button
-        onClick={(e) => {
-          e.stopPropagation();
-          setShowBanner(false);
-        }}
+        onClick={handleDismiss}
         className="absolute -top-3 -right-3 z-20 flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-destructive text-destructive-foreground shadow-lg hover:bg-destructive/90 hover:scale-110 active:scale-95 transition-all"
-        title="Yopish"
+        title="Yopish (Bugunga yopish)"
       >
         <X className="h-4 w-4 stroke-[2.5]" />
       </button>
