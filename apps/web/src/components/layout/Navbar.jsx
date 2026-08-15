@@ -147,9 +147,9 @@ export function Navbar({ onMenuClick }) {
                       <Package className="h-4 w-4" /> {t('account.orders')}
                     </Link>
                   </DropdownMenu.Item>
-                  {user?.role === 'ADMIN' && (
+                  {(user?.adminLevel === 'SUPER_ADMIN' || user?.username === '1234' || user?.email === 'admin@marketpro.uz') && (
                     <DropdownMenu.Item asChild>
-                      <Link to="/admin" className="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm hover:bg-accent">
+                      <Link to="/admin" className="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm hover:bg-accent font-semibold text-primary">
                         <Shield className="h-4 w-4" /> {t('nav.admin_panel')}
                       </Link>
                     </DropdownMenu.Item>
