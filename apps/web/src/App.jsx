@@ -21,6 +21,7 @@ import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import AccountLayout from '@/pages/account/AccountLayout';
 import Profile from '@/pages/account/Profile';
 import Orders from '@/pages/account/Orders';
+import AccountReviews from '@/pages/account/AccountReviews';
 import OrderDetail from '@/pages/account/OrderDetail';
 import Addresses from '@/pages/account/Addresses';
 import AccountSettings from '@/pages/account/Settings';
@@ -74,6 +75,7 @@ function App() {
             <Route path="/account" element={<AccountLayout />}>
               <Route path="profile" element={<Profile />} />
               <Route path="orders" element={<Orders />} />
+              <Route path="reviews" element={<AccountReviews />} />
               <Route path="orders/:id" element={<OrderDetail />} />
               <Route path="addresses" element={<Addresses />} />
               <Route path="settings" element={<AccountSettings />} />

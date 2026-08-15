@@ -1,6 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { User, Package, Heart, Bell, Clock, MapPin, Settings } from 'lucide-react';
+import { User, Package, Star, Heart, Bell, Clock, MapPin, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export default function AccountLayout() {
@@ -9,6 +9,7 @@ export default function AccountLayout() {
   const links = [
     { to: '/account/profile', icon: User, label: t('account.profile') },
     { to: '/account/orders', icon: Package, label: t('account.orders') },
+    { to: '/account/reviews', icon: Star, label: 'Baholash ⭐' },
     { to: '/wishlist', icon: Heart, label: t('account.wishlist') },
     { to: '/account/addresses', icon: MapPin, label: t('account.addresses') },
     { to: '/account/notifications', icon: Bell, label: t('account.notifications') },
@@ -27,7 +28,7 @@ export default function AccountLayout() {
               className={({ isActive }) =>
                 cn(
                   'flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
-                  isActive ? 'bg-primary text-primary-foreground' : 'hover:bg-accent text-foreground/80'
+                  isActive ? 'bg-primary text-primary-foreground font-bold shadow-sm' : 'hover:bg-accent text-foreground/80'
                 )
               }
             >

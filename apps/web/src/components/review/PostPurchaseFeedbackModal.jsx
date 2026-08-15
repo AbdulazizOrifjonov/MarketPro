@@ -35,16 +35,14 @@ export function PostPurchaseFeedbackModal() {
 
   const currentItem = pendingItems[0];
 
-  function handleGoToReviewPage(e) {
+  function handleGoToAccountReviews(e) {
     if (e) e.stopPropagation();
-    navigate(
-      `/review-product/${currentItem.productSlug}?orderNumber=${currentItem.orderNumber}&orderId=${currentItem.orderId}`
-    );
+    navigate('/account/reviews');
   }
 
   return (
     <div
-      onClick={handleGoToReviewPage}
+      onClick={handleGoToAccountReviews}
       className="fixed bottom-16 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-xl h-[100px] sm:h-[130px] md:h-[150px] rounded-2xl border-2 border-primary/40 bg-card/95 backdrop-blur-xl shadow-2xl p-2.5 sm:p-4 flex items-center justify-between gap-3 cursor-pointer hover:border-primary hover:shadow-primary/20 transition-all duration-300 animate-in slide-in-from-bottom-5"
     >
       {/* Left Product Image */}
@@ -73,7 +71,7 @@ export function PostPurchaseFeedbackModal() {
             <Star key={s} className="h-3.5 w-3.5 sm:h-4 sm:w-4 fill-amber-400" />
           ))}
           <span className="ml-1 text-[11px] font-semibold text-muted-foreground">
-            (Buyurtma #{currentItem.orderNumber})
+            ({pendingItems.length} ta mahsulot)
           </span>
         </div>
       </div>
@@ -82,7 +80,7 @@ export function PostPurchaseFeedbackModal() {
       <div className="shrink-0 flex flex-col gap-1 items-end">
         <Button
           size="sm"
-          onClick={handleGoToReviewPage}
+          onClick={handleGoToAccountReviews}
           className="gap-1 rounded-xl font-bold bg-primary hover:bg-primary/90 text-xs sm:text-sm px-3 sm:px-4 py-2 shadow-md"
         >
           <span>Baho berish</span>
