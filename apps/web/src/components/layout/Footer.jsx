@@ -44,14 +44,14 @@ export function Footer() {
               <ul className="space-y-2 text-sm text-white/70">
                 <li className="flex items-center gap-2">
                   <Phone className="h-3.5 w-3.5 shrink-0" />
-                  <a href="tel:+998712000000" className="hover:text-white">+998 71 200 00 00</a>
+                  <a href="tel:+998902155216" className="hover:text-white">+998 90 215 52 16</a>
                 </li>
                 <li className="flex items-center gap-2">
                   <Mail className="h-3.5 w-3.5 shrink-0" />
-                  <a href="mailto:info@delux.uz" className="hover:text-white">info@delux.uz</a>
+                  <a href="https://t.me/delux_computer" target="_blank" rel="noopener" className="hover:text-white">@delux_computer</a>
                 </li>
                 <li className="flex items-center gap-2">
-                  <MapPin className="h-3.5 w-3.5 shrink-0" /> Toshkent, O'zbekiston
+                  <MapPin className="h-3.5 w-3.5 shrink-0" /> Namangan shahar, Temir yo'l vokzali, A. Navoiy 69
                 </li>
               </ul>
             </div>

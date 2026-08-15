@@ -1,4 +1,4 @@
-/* DELUX Kompyuter & Orgtexnika — Light Liquid Glass Style System */
+/* DELUX Kompyuter & Orgtexnika — Official deluxpc.uz Style System */
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 :root {
@@ -11,7 +11,7 @@
   
   --bg-main: #FFFFFF;
   --bg-secondary: #F7FBF8;
-  --bg-card: rgba(255, 255, 255, 0.85);
+  --bg-card: rgba(255, 255, 255, 0.9);
   
   --border-glass: rgba(22, 163, 74, 0.18);
   --border-glass-hover: rgba(22, 163, 74, 0.5);
@@ -110,7 +110,7 @@ body {
 
 .liquid-glass:hover {
   border-color: var(--border-glass-hover);
-  box-shadow: 0 16px 45px 0 rgba(22, 163, 74, 0.15);
+  box-shadow: 0 16px 45px 0 rgba(22, 163, 74, 0.18);
 }
 
 .glass-pill {
@@ -173,7 +173,7 @@ body {
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 32px;
+  gap: 28px;
   list-style: none;
 }
 
@@ -305,7 +305,7 @@ body {
   flex-wrap: wrap;
 }
 
-/* Laptop Animated Interactive Showcase */
+/* Laptop Animated Interactive System Monitor Showcase */
 .hero-visual {
   position: relative;
   display: flex;
@@ -320,20 +320,64 @@ body {
 }
 
 .laptop-screen {
-  background: #0f172a;
+  background: #030810;
   border-radius: 20px;
   padding: 16px;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
-  border: 4px solid #334155;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+  border: 4px solid #1e293b;
   position: relative;
+  overflow: hidden;
+  color: #ffffff;
+}
+
+.sys-monitor {
+  background: rgba(15, 23, 42, 0.85);
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-family: monospace;
+}
+
+.sys-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 12px;
+  font-size: 12px;
+}
+
+.sys-live {
+  background: #16a34a;
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.metric-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  font-size: 12px;
+}
+
+.metric-bar {
+  flex: 1;
+  height: 8px;
+  background: #1e293b;
+  border-radius: 4px;
   overflow: hidden;
 }
 
-.laptop-screen img {
-  width: 100%;
-  height: 300px;
-  object-fit: cover;
-  border-radius: 12px;
+.metric-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #16a34a, #22c55e);
+  transition: width 1s ease;
 }
 
 .laptop-base {
@@ -345,20 +389,6 @@ body {
   position: relative;
 }
 
-.laptop-base::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80px;
-  height: 6px;
-  background: #1e293b;
-  border-bottom-left-radius: 6px;
-  border-bottom-right-radius: 6px;
-}
-
-/* Floating Tech Badges Animation */
 .floating-tech-badge {
   position: absolute;
   padding: 12px 20px;
@@ -373,16 +403,8 @@ body {
   animation: floatBadge 4s ease-in-out infinite alternate;
 }
 
-.badge-1 {
-  top: -20px;
-  left: -20px;
-}
-
-.badge-2 {
-  bottom: -15px;
-  right: -20px;
-  animation-delay: -2s;
-}
+.badge-1 { top: -20px; left: -20px; }
+.badge-2 { bottom: -15px; right: -20px; animation-delay: -2s; }
 
 @keyframes floatBadge {
   0% { transform: translateY(0px); }
@@ -417,6 +439,169 @@ body {
   font-weight: 600;
 }
 
+/* MARQUEE BRANDS TICKER */
+.marquee-section {
+  padding: 30px 0;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-glass);
+  border-bottom: 1px solid var(--border-glass);
+  overflow: hidden;
+}
+
+.marquee-track {
+  display: flex;
+  gap: 40px;
+  animation: marqueeScroll 25s linear infinite;
+  white-space: nowrap;
+}
+
+.marquee-item {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+  transition: color 0.3s;
+}
+
+.marquee-item:hover {
+  color: var(--primary-green);
+}
+
+@keyframes marqueeScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* APPLE STYLE 3D SCROLL REVEAL ANIMATIONS */
+.apple-3d-section {
+  padding: 110px 0;
+  perspective: 1200px;
+}
+
+.apple-card-3d {
+  opacity: 0;
+  transform: perspective(1200px) translateZ(-200px) rotateX(18deg) scale(0.85);
+  filter: blur(10px);
+  transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.apple-card-3d.apple-revealed {
+  opacity: 1;
+  transform: perspective(1200px) translateZ(0) rotateX(0deg) scale(1);
+  filter: blur(0px);
+}
+
+.apple-card-left {
+  opacity: 0;
+  transform: perspective(1200px) translateX(-140px) rotateY(25deg) scale(0.9);
+  filter: blur(8px);
+  transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.apple-card-left.apple-revealed {
+  opacity: 1;
+  transform: perspective(1200px) translateX(0) rotateY(0deg) scale(1);
+  filter: blur(0px);
+}
+
+.apple-card-right {
+  opacity: 0;
+  transform: perspective(1200px) translateX(140px) rotateY(-25deg) scale(0.9);
+  filter: blur(8px);
+  transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.apple-card-right.apple-revealed {
+  opacity: 1;
+  transform: perspective(1200px) translateX(0) rotateY(0deg) scale(1);
+  filter: blur(0px);
+}
+
+/* OFFICIAL DELUX PRODUCTS GRID */
+.prod-card-official {
+  padding: 24px;
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+
+.prod-photo-official {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 16px;
+  margin-bottom: 16px;
+}
+
+.prod-price-tag {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--primary-green);
+}
+
+/* MAP & CONTACT SECTION */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.contact-info-card {
+  padding: 36px;
+  border-radius: 32px;
+}
+
+.contact-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 28px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.contact-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  background: var(--light-green);
+  color: var(--primary-green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  shrink: 0;
+}
+
+.contact-link {
+  color: var(--text-main);
+  text-decoration: none;
+  font-weight: 700;
+  transition: color 0.2s;
+}
+
+.contact-link:hover {
+  color: var(--primary-green);
+}
+
+.map-container {
+  width: 100%;
+  height: 480px;
+  border-radius: 32px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border-glass);
+}
+
 /* Sections General */
 .section {
   padding: 90px 0;
@@ -446,115 +631,9 @@ body {
 }
 
 /* Grid Layouts */
-.grid-3 {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 28px;
-}
-
-.grid-4 {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
-}
-
-/* Feature & Showcase Cards */
-.feature-card {
-  padding: 32px;
-  border-radius: 24px;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-.feature-img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 16px;
-  margin-bottom: 20px;
-  transition: transform 0.4s ease;
-}
-
-.feature-card:hover .feature-img {
-  transform: scale(1.04);
-}
-
-.feature-icon-box {
-  width: 52px;
-  height: 52px;
-  background: var(--light-green);
-  border: 1px solid rgba(22, 163, 74, 0.25);
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 20px;
-  color: var(--primary-green);
-}
-
-.feature-title {
-  font-family: var(--font-heading);
-  font-size: 22px;
-  font-weight: 700;
-  margin-bottom: 10px;
-}
-
-.feature-desc {
-  font-size: 15px;
-  color: var(--text-muted);
-  line-height: 1.6;
-}
-
-/* Steps Section (Qanday sotib olish mumkin?) */
-.steps-wrapper {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-}
-
-.step-card {
-  padding: 30px 24px;
-  border-radius: 24px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.step-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.step-num {
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
-  color: #ffffff;
-  font-family: var(--font-heading);
-  font-weight: 800;
-  font-size: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 15px var(--glow-green);
-}
-
-.step-title {
-  font-family: var(--font-heading);
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.step-desc {
-  font-size: 14px;
-  color: var(--text-muted);
-  line-height: 1.6;
-}
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
 
 /* Modal */
 .modal-overlay {
@@ -575,10 +654,7 @@ body {
   transition: opacity 0.3s ease;
 }
 
-.modal-overlay.active {
-  opacity: 1;
-  pointer-events: auto;
-}
+.modal-overlay.active { opacity: 1; pointer-events: auto; }
 
 .modal-content {
   width: 100%;
@@ -592,9 +668,7 @@ body {
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
 }
 
-.modal-overlay.active .modal-content {
-  transform: translateY(0) scale(1);
-}
+.modal-overlay.active .modal-content { transform: translateY(0) scale(1); }
 
 .modal-close {
   position: absolute;
@@ -611,13 +685,9 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s;
 }
 
-.modal-close:hover {
-  background: #fee2e2;
-  color: #ef4444;
-}
+.modal-close:hover { background: #fee2e2; color: #ef4444; }
 
 /* Footer */
 .footer {
@@ -650,8 +720,9 @@ body {
   .hero-content { text-align: center; }
   .hero-btns { justify-content: center; }
   .hero-stats { grid-column: span 1; grid-template-columns: repeat(3, 1fr); }
+  .contact-grid { grid-template-columns: 1fr; }
+  .grid-2 { grid-template-columns: 1fr; }
   .grid-3 { grid-template-columns: repeat(2, 1fr); }
-  .steps-wrapper { grid-template-columns: repeat(2, 1fr); }
   .grid-4 { grid-template-columns: repeat(2, 1fr); }
 }
 
@@ -662,5 +733,5 @@ body {
   .hero-title { font-size: 34px; }
   .hero-desc { font-size: 16px; }
   .hero-stats { grid-template-columns: 1fr; gap: 16px; }
-  .grid-3, .grid-4, .steps-wrapper { grid-template-columns: 1fr; }
+  .grid-3, .grid-4 { grid-template-columns: 1fr; }
 }

@@ -10,10 +10,10 @@ export function TopBar() {
         </div>
         <div className="flex items-center gap-5">
           <span className="flex items-center gap-1.5">
-            <Clock className="h-3.5 w-3.5" /> Dush–Yak: 09:00–21:00
+            <Clock className="h-3.5 w-3.5" /> Dush–Shanba: 09:00–19:00
           </span>
-          <a href="tel:+998712000000" className="flex items-center gap-1.5 hover:text-white/80">
-            <Phone className="h-3.5 w-3.5" /> +998 71 200 00 00
+          <a href="tel:+998902155216" className="flex items-center gap-1.5 hover:text-white/80">
+            <Phone className="h-3.5 w-3.5" /> +998 90 215 52 16
           </a>
         </div>
       </div>
