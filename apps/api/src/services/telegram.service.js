@@ -10,6 +10,7 @@ export function getBot() { return bot; }
 export function stopBot() {
   if (bot) {
     try { bot.stop(); } catch (e) {}
+    bot = null;
   }
 }
 
@@ -33,7 +34,6 @@ async function onStart(ctx) {
 
   console.log(`[Bot] /start  chatId=${chatId}  session="${sessionId}"`);
 
-  // Always show the keyboard right away — no DB dependency for this step
   await ctx.replyWithHTML(
     '👋 Salom!\n\n' +
     '<b>DELUX</b> ga xush kelibsiz.\n\n' +
@@ -41,7 +41,6 @@ async function onStart(ctx) {
     SHARE_KEYBOARD
   );
 
-  // Link chatId to the session so the contact handler can find it
   if (sessionId) {
     try {
       const r = await prisma.verificationSession.updateMany({
@@ -88,7 +87,6 @@ async function onContact(ctx) {
     });
 
     if (session) {
-      // Link chatId to session now
       await prisma.verificationSession.update({
         where: { id: session.id },
         data: { chatId: String(chatId) },
@@ -104,7 +102,6 @@ async function onContact(ctx) {
     return;
   }
 
-  // Compare phone numbers
   const sessionPhone = normalizePhone(session.phone);
 
   if (tgPhone !== sessionPhone) {
@@ -118,7 +115,6 @@ async function onContact(ctx) {
     return;
   }
 
-  // Persist TelegramAccount
   await prisma.telegramAccount
     .upsert({
       where: { telegramId },
@@ -140,7 +136,6 @@ async function onContact(ctx) {
     })
     .catch((e) => console.warn('[Bot] TelegramAccount upsert:', e.message));
 
-  // Generate OTP
   const otp       = generateOtp();
   const otpHash   = await hashOtp(otp);
   const expiresAt = new Date(Date.now() + 5 * 60_000); // 5 minutes
@@ -156,7 +151,6 @@ async function onContact(ctx) {
     });
   });
 
-  // Send OTP — keyboard removed
   await ctx.replyWithHTML(
     `✅ <b>Telefon tasdiqlandi!</b>\n\n` +
     `🔑 Tasdiqlash kodingiz:\n\n` +
@@ -169,7 +163,6 @@ async function onContact(ctx) {
   console.log(`[Bot] ✓ OTP sent successfully to chatId=${chatId}`);
 }
 
-// ─── Other messages ───────────────────────────────────────────────────────────
 async function onMessage(ctx) {
   if (ctx.chat.type !== 'private') return;
   if (ctx.message.contact) return;
@@ -195,12 +188,13 @@ async function onMessage(ctx) {
   }
 }
 
-// ─── Start ────────────────────────────────────────────────────────────────────
 export function startBot() {
   if (!BOT_TOKEN) {
     console.warn('[Bot] TELEGRAM_BOT_TOKEN topilmadi — bot o\'chirilgan');
     return;
   }
+
+  stopBot();
 
   bot = new Telegraf(BOT_TOKEN);
 
@@ -213,8 +207,10 @@ export function startBot() {
   bot
     .launch({ dropPendingUpdates: true })
     .then(() => console.log('[Bot] ✓ DELUX Telegram Bot ishga tushdi'))
-    .catch((err) => console.error('[Bot] ✗ ishga tushmadi:', err.message));
+    .catch((err) => {
+      console.warn('[Bot] ⚠️ Telegram bot connection / polling notice:', err.message);
+    });
 
-  process.once('SIGINT',  () => bot.stop('SIGINT'));
-  process.once('SIGTERM', () => bot.stop('SIGTERM'));
+  process.once('SIGINT',  () => stopBot());
+  process.once('SIGTERM', () => stopBot());
 }
