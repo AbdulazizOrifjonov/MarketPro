@@ -60,12 +60,19 @@ async function fixPicsumImages() {
   }
 }
 
-const PORT = process.env.PORT || 5000;
-
 const server = app.listen(PORT, () => {
-  console.log(`MarketPro API running on http://localhost:${PORT}`);
+  console.log(`DELUX API running on http://localhost:${PORT}`);
   startBot();
   fixPicsumImages();
+});
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`Port ${PORT} allaqachon band (EADDRINUSE). Oldingi Node jarayonini yoping.`);
+    process.exit(1);
+  } else {
+    console.error('Server error:', err);
+  }
 });
 
 function gracefulShutdown(signal) {
